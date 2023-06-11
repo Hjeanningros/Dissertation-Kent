@@ -3,12 +3,12 @@
 
 class Benchmark {
     public: 
-        virtual std::shared_ptr<void> _benchmark() = 0; // std::any instead ?
-        virtual bool _verifyResult(std::shared_ptr<void> result) = 0;
+        virtual int benchmark() = 0; // std::any instead ? return std::shared_ptr<void> ?
+        virtual bool verifyResult(int result) = 0; // as argument std::shared_ptr<void> ?
 
         bool innerBenchmarkLoop(int innerIterations) {
             for (int i = 0; i < innerIterations; i++) {
-                if (!_verifyResult(_benchmark())) {
+                if (!verifyResult(benchmark())) {
                     return false;
                 }
             }
