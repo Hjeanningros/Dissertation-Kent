@@ -6,7 +6,7 @@
 #include "Bounce.cpp"
 #include <iostream>
 #include <chrono>
-
+#include "Sieve.cpp"
 class Run{
     private: 
         std::string _name;
@@ -16,10 +16,10 @@ class Run{
         long _total;
 
         static std::function<std::shared_ptr<Benchmark>()> getSuiteFromName(std::string name) {
-            std::vector<std::string> benchmarkName = {"Bounce", "Towers"};
+            std::vector<std::string> benchmarkName = {"Bounce", "Sieve"};
             std::vector<std::function<std::shared_ptr<Benchmark>()>> benchmarkFunction;
             benchmarkFunction.push_back([]() {return std::shared_ptr<Bounce>(); });
-            //benchmarkFunction.push_back([]() {return std::shared_ptr<Towers>(); });
+            benchmarkFunction.push_back([]() {return std::shared_ptr<Sieve>(); });
 
             for (int i = 0; i < (int)benchmarkName.size(); i++) { // delete cast
                 if (benchmarkName[i] == name)
@@ -86,7 +86,6 @@ class Run{
             _innerIterations = innerIterations;
         }  
 
-        
         ~Run() {
         }
 };

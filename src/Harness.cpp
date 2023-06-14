@@ -24,6 +24,10 @@ class Harness {
             std::cout << "  inner-iter     - number of times the benchmark is executed in an inner loop, " << std::endl;
             std::cout << "                   which is measured in total, default: 1" << std::endl;
         }
+
+
+        ~Harness() {
+        }
 };
 
 int main(int argc, char** argv) {
