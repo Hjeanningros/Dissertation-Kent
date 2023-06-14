@@ -15,17 +15,16 @@ class Bounce : public Benchmark
                 int _y;
                 int _xVel;
                 int _yVel;
-        
-            Ball() {
 
+            public:
+            
+            Ball() {
                 _x = rand() % 500;
                 _y = rand() % 500;
                 _xVel = (rand() % 300) - 150;
                 _yVel = (rand() % 300) - 150;
             }
 
-            public:
-            
             bool bounce() {
                 int xLimit = 500;
                 int yLimit = 500;

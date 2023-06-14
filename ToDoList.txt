@@ -1,0 +1,17 @@
+- Main function  ///  Harness.java ------------
+- Sieve.java prime number  
+
+
+Check c++ version for modules 
+
+- Check for a linter
+
+
+Monday:
+
+HAve to change harness private to public
+
+
+Tips: 
+
+Check other implementation if I don't know what to do/choose (if witch case...)

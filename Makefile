@@ -1,7 +1,8 @@
 SRC_CORE=	src/Benchmark.cpp				\
 			src/Bounce.cpp					\
 			src/Error.cpp					\
-			src/Run.cpp 					
+			src/Run.cpp 					\
+			src/Harness.cpp			
 		    
 
 

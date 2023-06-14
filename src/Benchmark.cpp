@@ -3,7 +3,7 @@
 
 class Benchmark {
     public: 
-        virtual int benchmark() = 0; // std::any instead ? return std::shared_ptr<void> ?
+        virtual int benchmark() = 0; // std::any instead ? return std::shared_ptr<void> ? Try without shared pointer
         virtual bool verifyResult(int result) = 0; // as argument std::shared_ptr<void> ?
 
         bool innerBenchmarkLoop(int innerIterations) {

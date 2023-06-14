@@ -2,7 +2,7 @@
 #include <functional>
 #include <memory>
 #include <vector>
-#include "Error.cpp"
+#include "som/Error.cpp"
 #include "Bounce.cpp"
 #include <iostream>
 #include <chrono>
