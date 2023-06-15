@@ -1,11 +1,8 @@
 #include "Benchmark.cpp"
-#include <string>
-#include <cstdlib>
-#include <iostream>
-#include <vector>
+#include <memory>
 
-class List : public Benchmark {
-
+class List : public Benchmark 
+{
     private: 
 
         class Element {
@@ -75,7 +72,7 @@ class List : public Benchmark {
                 return result->length();
             }
 
-            bool verifyResult(int result) {
+            bool verifyResult(int result) override {
                 return 10 == result;
             }
 };

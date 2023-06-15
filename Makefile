@@ -1,9 +1,12 @@
-SRC_CORE=	src/Benchmark.cpp				\
+SRC_CORE=	src/som/Error.cpp					\
 			src/Bounce.cpp					\
-			src/Error.cpp					\
 			src/Run.cpp 					\
-			src/Harness.cpp			
-		    
+			src/Harness.cpp					\
+			src/List.cpp					\
+			src/Mandelbrot.cpp				\
+			src/Benchmark.cpp				\
+
+
 
 
 OBJ_CORE    =	$(SRC_CORE:.cpp=.o)
