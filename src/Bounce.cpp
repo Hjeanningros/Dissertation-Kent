@@ -56,6 +56,9 @@ class Bounce : public Benchmark
                 return bounced;
             }
 
+            ~Ball() {
+            }
+
         };
 
 
