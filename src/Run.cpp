@@ -2,6 +2,8 @@
 #include "Mandelbrot.cpp"
 #include "Sieve.cpp"
 #include "List.cpp"
+#include "Permute.cpp"
+#include "Queens.cpp"
 #include <string>
 #include <functional>
 #include <memory>
@@ -9,6 +11,7 @@
 #include <iostream>
 #include <chrono>
 #include "Benchmark.cpp"
+
 
 class Run{
     private: 
@@ -25,6 +28,8 @@ class Run{
             benchmarkFunction.push_back([]() {return std::shared_ptr<Sieve>(); });
             benchmarkFunction.push_back([]() {return std::shared_ptr<List>(); });
             benchmarkFunction.push_back([]() {return std::shared_ptr<Mandelbrot>(); });
+            benchmarkFunction.push_back([]() {return std::shared_ptr<Permute>(); });
+            benchmarkFunction.push_back([]() {return std::shared_ptr<Queens>(); });
 
             for (int i = 0; i < (int)benchmarkName.size(); i++) { // delete cast
                 if (benchmarkName[i] == name)

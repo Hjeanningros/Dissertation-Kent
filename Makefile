@@ -1,12 +1,13 @@
-SRC_CORE=	src/som/Error.cpp					\
+SRC_CORE=	src/som/Error.cpp				\
 			src/Bounce.cpp					\
 			src/Run.cpp 					\
 			src/Harness.cpp					\
 			src/List.cpp					\
 			src/Mandelbrot.cpp				\
 			src/Benchmark.cpp				\
-			src/Sieve.cpp
-
+			src/Sieve.cpp					\
+			src/Permute.cpp					\
+			src/Queens.cpp
 
 
 
