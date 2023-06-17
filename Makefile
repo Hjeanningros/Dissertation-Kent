@@ -5,6 +5,7 @@ SRC_CORE=	src/som/Error.cpp					\
 			src/List.cpp					\
 			src/Mandelbrot.cpp				\
 			src/Benchmark.cpp				\
+			src/Sieve.cpp
 
 
 

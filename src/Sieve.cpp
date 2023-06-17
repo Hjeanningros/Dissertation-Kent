@@ -1,4 +1,5 @@
 #include <vector>
+#include "Benchmark.cpp"
 
 class Sieve : public Benchmark
 {

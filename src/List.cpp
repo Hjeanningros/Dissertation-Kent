@@ -1,5 +1,5 @@
-#include "Benchmark.cpp"
 #include <memory>
+#include "Benchmark.cpp"
 
 class List : public Benchmark 
 {

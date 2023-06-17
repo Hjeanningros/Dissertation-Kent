@@ -1,3 +1,5 @@
+#ifndef B_OOP_400_STG_4_1_ARCADE_NICOLAS_SCHNEIDER_CLOCK_HPP
+#define B_OOP_400_STG_4_1_ARCADE_NICOLAS_SCHNEIDER_CLOCK_HPP
 
 #include <memory>
 
@@ -18,3 +20,5 @@ class Benchmark {
         ~Benchmark() {
         }
 };
+
+#endif //B_OOP_400_STG_4_1_ARCADE_NICOLAS_SCHNEIDER_CLOCK_HPP

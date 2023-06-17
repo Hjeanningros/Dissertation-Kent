@@ -1,9 +1,10 @@
-#include "Benchmark.cpp"
 #include <string>
 #include <cstdlib>
 #include <iostream>
 #include <time.h>
 #include <vector>
+#include <memory>
+#include "Benchmark.cpp"
 
 class Bounce : public Benchmark 
 {

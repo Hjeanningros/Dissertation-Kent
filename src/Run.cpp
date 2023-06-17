@@ -8,6 +8,7 @@
 #include <vector>
 #include <iostream>
 #include <chrono>
+#include "Benchmark.cpp"
 
 class Run{
     private: 

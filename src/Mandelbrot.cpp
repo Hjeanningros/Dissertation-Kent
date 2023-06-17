@@ -1,6 +1,6 @@
 #include "som/Error.cpp"
-#include "Benchmark.cpp"
 #include <iostream>
+#include "Benchmark.cpp"
 
 class Mandelbrot : public Benchmark {
 
