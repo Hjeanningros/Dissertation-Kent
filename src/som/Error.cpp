@@ -1,4 +1,10 @@
+
+#ifndef ERROR
+#define ERROR
+
+
 #include <string>
+
 
 class Error : virtual public std::exception {
     private:
@@ -20,3 +26,5 @@ class Error : virtual public std::exception {
             return (_what.c_str());
         }
 };
+
+#endif //ERROR

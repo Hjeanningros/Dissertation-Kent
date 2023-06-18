@@ -7,7 +7,8 @@ SRC_CORE=	src/som/Error.cpp				\
 			src/Benchmark.cpp				\
 			src/Sieve.cpp					\
 			src/Permute.cpp					\
-			src/Queens.cpp
+			src/Queens.cpp					\
+			src/Towers.cpp
 
 
 
@@ -15,7 +16,7 @@ OBJ_CORE    =	$(SRC_CORE:.cpp=.o)
 
 CXXFLAGS+=	-Wall -Wextra -std=c++17
 
-NAME_CORE   =	Benchmark
+NAME_CORE   =	Harness
 
 
 $(NAME_CORE):	$(OBJ_CORE)

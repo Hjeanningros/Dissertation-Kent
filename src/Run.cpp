@@ -4,6 +4,7 @@
 #include "List.cpp"
 #include "Permute.cpp"
 #include "Queens.cpp"
+#include "Towers.cpp"
 #include <string>
 #include <functional>
 #include <memory>
@@ -30,6 +31,7 @@ class Run{
             benchmarkFunction.push_back([]() {return std::shared_ptr<Mandelbrot>(); });
             benchmarkFunction.push_back([]() {return std::shared_ptr<Permute>(); });
             benchmarkFunction.push_back([]() {return std::shared_ptr<Queens>(); });
+            benchmarkFunction.push_back([]() {return std::shared_ptr<Towers>(); });
 
             for (int i = 0; i < (int)benchmarkName.size(); i++) { // delete cast
                 if (benchmarkName[i] == name)
