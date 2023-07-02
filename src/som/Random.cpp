@@ -2,10 +2,6 @@
 #ifndef RANDOM
 #define RANDOM
 
-
-#include <string>
-
-
 class Random {
     private:
         int _seed;

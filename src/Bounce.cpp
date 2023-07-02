@@ -1,6 +1,4 @@
-#include <string>
 #include <cstdlib>
-#include <iostream>
 #include <vector>
 #include <memory>
 #include "Benchmark.cpp"
@@ -19,11 +17,11 @@ class Bounce : public Benchmark
 
             public:
             
-            Ball(Random random) {
-                _x = random.next() % 500;
-                _y = random.next() % 500;
-                _xVel = (random.next() % 300) - 150;
-                _yVel = (random.next() % 300) - 150;
+            Ball(std::shared_ptr<Random> random) {
+                _x = random->next() % 500;
+                _y = random->next() % 500;
+                _xVel = (random->next() % 300) - 150;
+                _yVel = (random->next() % 300) - 150;
             }
 
             bool bounce() {
@@ -50,7 +48,7 @@ class Bounce : public Benchmark
                     bounced = true;
                 } 
                 if (_y < 0) {
-                    _x = 0;
+                    _y = 0;
                     _yVel = abs(_yVel);
                     bounced = true;
                 }
@@ -61,12 +59,12 @@ class Bounce : public Benchmark
 
     public:
         std::any benchmark() override {
-            Random random = Random();
+            std::shared_ptr<Random> random = std::make_shared<Random>();
             int ballCount = 100;
             int bounces = 0;
             std::vector<Ball> balls;
 
-            for (int i = 0; i < ballCount; i++)
+            for (int i = 0; i < 100; i++)
                 balls.push_back(Ball(random));
 
             for (int i = 0; i < 50; i++) {
@@ -81,7 +79,7 @@ class Bounce : public Benchmark
         }
         
         bool verifyResult(std::any result) override {
-            int result_cast =std::any_cast<int>(result);
+            int result_cast = std::any_cast<int>(result);
             return 1331 == result_cast;
         }
 };
