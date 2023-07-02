@@ -5,12 +5,12 @@
 class Harness {
     public:
 
-        static Run processArguments(char** args) {
+        static Run processArguments(char** args, int argc) {
             Run run = Run(args[1]);
 
-            if (sizeof(args) > 2) {
+            if (argc > 2) {
                 run.setNumIterations(std::atoi(args[2]));
-                if (sizeof(args) > 3) {
+                if (argc > 3) {
                     run.setInnerIterations(std::atoi(args[3]));
                 }
             }
@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    Run run = harness.processArguments(argv);
+    Run run = harness.processArguments(argv, argc);
     run.runBenchmark();
     run.printTotal();
 }
