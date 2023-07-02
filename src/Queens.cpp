@@ -1,5 +1,6 @@
 #include <vector>
 #include "Benchmark.cpp"
+#include <iostream>
 
 class Queens : public Benchmark
 {
@@ -10,11 +11,13 @@ class Queens : public Benchmark
         std::vector<int> _queenRows;
 
         bool queens() {
-            _freeMaxs.assign(8, true);
-            _freeRows.assign(16, true);
+            _freeRows.assign(8, true);
+
+            //for (int i = 0; i < 8; i++)
+            //    std::cout << i << _freeMaxs[i] << std::endl;
+            _freeMaxs.assign(16, true);
             _freeMins.assign(16, true);
             _queenRows.assign(8, -1);
-
             return placeQueen(0);
         }
 

@@ -17,26 +17,27 @@
 class Run{
     private: 
         std::string _name;
-        std::function<std::shared_ptr<Benchmark>()> _benchmarkSuite;
+        std::shared_ptr<Benchmark> _benchmarkSuite;
         int _numIterations;
         int _innerIterations;
         long _total;
 
-        static std::function<std::shared_ptr<Benchmark>()> getSuiteFromName(std::string name) {
-            std::vector<std::string> benchmarkName = {"Bounce", "Sieve"};
-            std::vector<std::function<std::shared_ptr<Benchmark>()>> benchmarkFunction;
-            benchmarkFunction.push_back([]() {return std::shared_ptr<Bounce>(); });
-            benchmarkFunction.push_back([]() {return std::shared_ptr<Sieve>(); });
-            benchmarkFunction.push_back([]() {return std::shared_ptr<List>(); });
-            benchmarkFunction.push_back([]() {return std::shared_ptr<Mandelbrot>(); });
-            benchmarkFunction.push_back([]() {return std::shared_ptr<Permute>(); });
-            benchmarkFunction.push_back([]() {return std::shared_ptr<Queens>(); });
-            benchmarkFunction.push_back([]() {return std::shared_ptr<Towers>(); });
+        static std::shared_ptr<Benchmark> getSuiteFromName(const std::string &name) {
 
-            for (int i = 0; i < (int)benchmarkName.size(); i++) { // delete cast
-                if (benchmarkName[i] == name)
-                    return benchmarkFunction[i];
-            }
+            if (name == "Bounce")
+                return std::make_shared<Bounce>();
+            if (name == "Sieve")
+                return std::make_shared<Sieve>();
+            if (name == "List")
+                return std::make_shared<List>();
+            if (name == "Mandelbrot")
+                return std::make_shared<Mandelbrot>();
+            if (name == "Permute")
+                return std::make_shared<Permute>();
+            if (name == "Queens")
+                return std::make_shared<Queens>();
+            if (name == "Towers")
+                return std::make_shared<Towers>();
             
             throw Error("No benchmark found with the name: " + name);
         }
@@ -44,13 +45,15 @@ class Run{
 
         void measure(std::shared_ptr<Benchmark> bench) {
             auto startTime = std::chrono::high_resolution_clock::now();
+
             if(!bench->innerBenchmarkLoop(_innerIterations)) {
                 throw Error("Benchmark fail with incorrect result");
             }
+            
             auto endTime = std::chrono::high_resolution_clock::now();
             long runTime = std::chrono::duration_cast<std::chrono::nanoseconds>(endTime - startTime).count() / 1000;
 
-            std::cout << runTime << std::endl;
+            printResult(runTime);
             _total += runTime;
         };
 
@@ -60,12 +63,12 @@ class Run{
         };
 
         void reportBenchmark() {
-            std::cout << _name << ": iterations=" << _numIterations + " average: " + (_total / _numIterations) 
-                << "us total: " << _total << "us"<< std::endl;
+            std::cout << _name << ": iterations=" << _numIterations << " average: " 
+            << (_total / _numIterations) << "us total: " << _total << "us" << std::endl;
         }
 
         void printResult(long runTime) {
-            std::cout << _name << ": iterations=1 runtime: " << runTime + "us" << std::endl;
+            std::cout << _name << ": iterations=1 runtime: " << runTime << "us" << std::endl;
         }
     
     public: 
@@ -75,12 +78,13 @@ class Run{
             _benchmarkSuite = getSuiteFromName(name);
             _numIterations = 1;
             _innerIterations = 1;
+            _total = 0;
         }
 
         void runBenchmark() {
             std::cout << "Starting " << _name << " benchmark ..." << std::endl;
 
-            doRuns(_benchmarkSuite());
+            doRuns(_benchmarkSuite);
             reportBenchmark();
 
             std::cout << std::endl;
