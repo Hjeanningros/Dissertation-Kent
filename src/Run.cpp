@@ -70,7 +70,7 @@ class Run{
     
     public: 
 
-        Run(std::string name) {
+        Run(const std::string& name) {
             _name = name;
             _benchmarkSuite = getSuiteFromName(name);
             _numIterations = 1;
@@ -87,7 +87,7 @@ class Run{
         }
 
         void printTotal() {
-            std::cout << "Total Runtime: " << _total + "us" << std::endl;
+            std::cout << "Total Runtime: " << _total << "us" << std::endl;
         }
 
         void setNumIterations(int numIterations) {
@@ -96,8 +96,5 @@ class Run{
 
         void setInnerIterations(int innerIterations) {
             _innerIterations = innerIterations;
-        }  
-
-        ~Run() {
         }
 };

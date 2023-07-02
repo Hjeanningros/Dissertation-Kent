@@ -5,12 +5,12 @@ class Sieve : public Benchmark
 {
     public:
    
-    int benchmark() override {
+    std::any benchmark() override {
         std::vector<bool> flags(5000, true);
         return sieve(flags, 5000);
     }
 
-    int sieve(std::vector<bool>& flags, int size) {
+    static int sieve(std::vector<bool>& flags, int size) {
         int primeCount = 0;
 
         for (int i = 2; i <= size; i++) {
@@ -26,7 +26,8 @@ class Sieve : public Benchmark
         return primeCount;
     }
     
-    bool verifyResult(int result) override {
-        return 669 == result;
+    bool verifyResult(std::any result) override {
+        int result_cast = std::any_cast<int>(result);
+        return 669 == result_cast;
     }
 };

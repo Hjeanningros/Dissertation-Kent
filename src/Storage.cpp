@@ -1,60 +1,38 @@
 #include <vector>
 #include "Benchmark.cpp"
-
+#include "som/Random.cpp"
 class Storage : public Benchmark
 {
     private:
         int _count;
 
-        std::vector<int> buildTreeDepth(int depth) {
+        std::vector<void> buildTreeDepth(int depth, Random random) {
             _count++;
 
             if (depth == 1) {
-                std::vector<int> node = std::vector<int>(rand() % 10 + 1);
+                std::vector<void> node = std::vector<void>(random.next() % 10 + 1);
                 return node;
             } else {
-                std::vector<std::vector<int>> arr = std::vector<std::vector<int>>(4);;
+                std::vector<void> arr = std::vector<void>(4);;
 
                 for(int i = 0; i < 4; i++) {
-                    arr[i] = buildTreeDepth(depth - 1);
+                    arr[i] = buildTreeDepth(depth - 1, random);
                 }
                 return arr;
             }
         }
 
     public:
-        int benchmark() override {
-            srand(time(0));
+        std::any benchmark() override {
+            Random random = Random();
+            _count = 0;
             buildTreeDepth(7, random);
             return _count;
         }
 
-        bool verifyResult(int result) override {
-            return 5461 == (int)result;
+        bool verifyResult(std::any result) override {
+            bool result_cast = std::any_cast<int>(result);
+            return 5461 == result_cast;
         }
 };
 
-
-
-public final class Storage extends Benchmark {
-
-  private int count;
-
-  @Override
-  public Object benchmark() {
-    Random random = new Random();
-    count = 0;
-    buildTreeDepth(7, random);
-    return count;
-  }
-
-  private Object buildTreeDepth(final int depth, final Random random) {
-    count++;
-    if (depth == 1) {
-      return new Object[random.next() % 10 + 1];
-    } else {
-      Object[] arr = new Object[4];
-      Arrays.setAll(arr, v -> buildTreeDepth(depth - 1, random));
-      return arr;
-    }
-  }

@@ -15,7 +15,7 @@ class Permute : public Benchmark
         }
 
     public:
-        int benchmark() override {
+        std::any benchmark() override {
             _count = 0;
             permute(6);
             return _count;
@@ -34,7 +34,8 @@ class Permute : public Benchmark
             }
         }
     
-        bool verifyResult(int result) override {
-            return result == 8660;
+        bool verifyResult(std::any result) override {
+            int result_cast = std::any_cast<int>(result);
+            return result_cast == 8660;
         }
 };

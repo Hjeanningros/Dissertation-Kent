@@ -1,4 +1,5 @@
 SRC_CORE=	src/som/Error.cpp				\
+			src/som/Random.cpp				\
 			src/Bounce.cpp					\
 			src/Run.cpp 					\
 			src/Harness.cpp					\

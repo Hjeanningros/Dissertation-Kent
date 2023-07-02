@@ -19,9 +19,6 @@ class Error : virtual public std::exception {
             _what = std::string(what);
         }
 
-        ~Error() {
-        }
-
         const char *what() const throw() {
             return (_what.c_str());
         }

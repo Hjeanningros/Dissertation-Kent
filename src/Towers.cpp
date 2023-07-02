@@ -1,3 +1,4 @@
+#include <utility>
 #include <vector>
 #include "Benchmark.cpp"
 #include "som/Error.cpp"
@@ -10,14 +11,17 @@ class Towers : public Benchmark
 
             private: 
                 int _size;
-                std::shared_ptr<TowersDisk> _next;
+                std::shared_ptr<TowersDisk> _next{};
 
-            public: 
+            public:
+
+                TowersDisk() = default;
+
                 TowersDisk(int size) {
                     _size = size;
                 }
 
-                int getSize() {
+                int getSize() const {
                     return _size;
                 }
 
@@ -26,7 +30,7 @@ class Towers : public Benchmark
                 }
 
                 void setNext(std::shared_ptr<TowersDisk> value) {
-                    _next = value;
+                    _next = std::move(value);
                 }
         };
 
@@ -36,7 +40,7 @@ class Towers : public Benchmark
         void pushDisk(std::shared_ptr<TowersDisk> disk, int pile) {
             std::shared_ptr<TowersDisk> top = _piles[pile];
 
-            if (!(top == NULL) && (disk->getSize() >= top->getSize())) {
+            if (!(top == nullptr) && (disk->getSize() >= top->getSize())) {
                 throw Error("Cannot put a big disk on a smaller one");
             }
 
@@ -47,12 +51,12 @@ class Towers : public Benchmark
         std::shared_ptr<TowersDisk> popDiskFrom(int pile) {
             std::shared_ptr<TowersDisk> top = _piles[pile];
 
-            if (top == NULL) {
+            if (top == nullptr) {
                 throw Error("Attempting to remove a disk from an empty pile");
             }
 
             _piles[pile] = top->getNext();
-            top->setNext(NULL);
+            top->setNext(nullptr);
             return top;
         }
 
@@ -79,7 +83,7 @@ class Towers : public Benchmark
         }
 
     public:
-        int benchmark() override {
+        std::any benchmark() override {
             _piles = std::vector<std::shared_ptr<TowersDisk>>(3);
             buildTowerAt(0, 13);
             _movesDone = 0;
@@ -88,7 +92,8 @@ class Towers : public Benchmark
             return _movesDone;
         }
 
-        bool verifyResult(int result) override {
-            return 8191 == (int)result;
+        bool verifyResult(std::any result) override {
+            int result_cast = std::any_cast<int>(result);
+            return 8191 == result_cast;
         }
 };

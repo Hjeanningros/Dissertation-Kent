@@ -1,12 +1,40 @@
 TODO:
 - Check c++ version for modules 
-- Check for a linter
+- check python Harness
+- Comparable<CallSign> ??
+- Lamda for c++ 
+- use shared_ptr most of the time 
+- check if clangtidy work on github action Linter
 
 DONE:
-- Main function  ///  Harness.java ------------
-- Sieve.cpp
-- Bounce.cpp
-- List.cpp
+- Main function  ///  Harness.java 
+- Random.cpp
+- Unique file Benchmark
+- Check for a linter
+
+TRY: 
+- different memory management (simple *)
+
+
+
+
+
+
+
+
+WRITTING PART:
+
+First part Description: 
+Benchmarking across languages...
+    standart approach to translate cpp (my rule, java, sharedptr, vector...)
+
+
+Second part 
+    memory management
+
+
+
+    
 
 
 
@@ -14,11 +42,18 @@ DONE:
 
 Monday Call KeyPoint:
 
-- Have to change harness private to public
+- check python for Harness
+- CD::Motion Problem with  NULL return. I return shared_ptr actuall to return NULL object
+- Create a bool valid and set it to true when initialise it ?
+- I use Class{} which is the class with default-initialized member
+- Same in List.cpp for Element and TowerDisk
+- Instance of itself must be a pointer
 
 
-Tips: 
+TIPS : 
 
 - Check other implementation if I don't know what to do/choose (if witch case...)
 
 
+- std::any type safe, if cast to the wrong type throw an exception 
+- Void* get undefined behavior, hard to find were is the bug

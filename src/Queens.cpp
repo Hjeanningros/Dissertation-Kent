@@ -49,7 +49,7 @@ class Queens : public Benchmark
 
 
     public:
-        int benchmark() override {
+        std::any benchmark() override {
             bool result = true;
             for (int i = 0; i < 10; i++) {
                 result = result && queens();
@@ -57,7 +57,8 @@ class Queens : public Benchmark
             return result;
         }
     
-        bool verifyResult(int result) override {
-            return (bool)result; //Change the variable type
+        bool verifyResult(std::any result) override {
+            bool result_cast = std::any_cast<bool>(result);
+            return result_cast;
         }
 };

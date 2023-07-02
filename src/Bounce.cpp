@@ -1,10 +1,10 @@
 #include <string>
 #include <cstdlib>
 #include <iostream>
-#include <time.h>
 #include <vector>
 #include <memory>
 #include "Benchmark.cpp"
+#include "som/Random.cpp"
 
 class Bounce : public Benchmark 
 {
@@ -19,11 +19,11 @@ class Bounce : public Benchmark
 
             public:
             
-            Ball() {
-                _x = rand() % 500;
-                _y = rand() % 500;
-                _xVel = (rand() % 300) - 150;
-                _yVel = (rand() % 300) - 150;
+            Ball(Random random) {
+                _x = random.next() % 500;
+                _y = random.next() % 500;
+                _xVel = (random.next() % 300) - 150;
+                _yVel = (random.next() % 300) - 150;
             }
 
             bool bounce() {
@@ -56,27 +56,22 @@ class Bounce : public Benchmark
                 }
                 return bounced;
             }
-
-            ~Ball() {
-            }
-
         };
 
 
     public:
-        int benchmark() override {
-            srand(time(0));
-
+        std::any benchmark() override {
+            Random random = Random();
             int ballCount = 100;
             int bounces = 0;
-            std::vector<std::shared_ptr<Ball>> balls;
+            std::vector<Ball> balls;
 
             for (int i = 0; i < ballCount; i++)
-                balls.push_back(std::make_shared<Ball>());
+                balls.push_back(Ball(random));
 
             for (int i = 0; i < 50; i++) {
-                for (std::shared_ptr<Ball>& ball: balls) {
-                    if (ball->bounce()) {
+                for (Ball& ball: balls) {
+                    if (ball.bounce()) {
                         bounces += 1;
                     }
                 }
@@ -85,10 +80,8 @@ class Bounce : public Benchmark
             return bounces;
         }
         
-        bool verifyResult(int result) override {
-            return 1331 == result;
-        }
-
-        ~Bounce() {
+        bool verifyResult(std::any result) override {
+            int result_cast =std::any_cast<int>(result);
+            return 1331 == result_cast;
         }
 };

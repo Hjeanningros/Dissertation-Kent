@@ -5,7 +5,7 @@
 class Mandelbrot : public Benchmark {
 
     private:
-        bool verifyResult(int result, int innerIterations) {
+        static bool verifyResult(int result, int innerIterations) {
             if (innerIterations == 500) {
                 return result == 191;
             }
@@ -22,7 +22,7 @@ class Mandelbrot : public Benchmark {
             return false;
         }
 
-        int mandelbrot(int size) {
+        static int mandelbrot(int size) {
             int sum = 0;
             int byteAcc = 0;
             int bitNum = 0;
@@ -86,11 +86,11 @@ class Mandelbrot : public Benchmark {
             return verifyResult(mandelbrot(innerIterations), innerIterations);
         }
 
-        int benchmark() override {
+        std::any benchmark() override {
             throw Error("Should never be reached");
         }
 
-        bool verifyResult(int result) override {
+        bool verifyResult(std::any result) override {
             throw Error("Should never be reached");
         }
 };
