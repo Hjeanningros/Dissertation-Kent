@@ -12,7 +12,7 @@
 #include <iostream>
 #include <chrono>
 #include "Benchmark.cpp"
-
+#include "Richards.cpp"
 
 class Run{
     private: 
@@ -38,6 +38,9 @@ class Run{
                 return std::make_shared<Queens>();
             if (name == "Towers")
                 return std::make_shared<Towers>();
+            if (name == "Richards")
+                return std::make_shared<richards::Richards>();
+                
             
             throw Error("No benchmark found with the name: " + name);
         }

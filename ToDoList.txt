@@ -1,21 +1,20 @@
 TODO:
 - Check c++ version for modules 
 - check python Harness
-- Comparable<CallSign> ??
 - Lamda for c++ 
 - use shared_ptr most of the time 
 - check if clangtidy work on github action Linter
 
 DONE:
-- Main function  ///  Harness.java 
-- Random.cpp
-- Unique file Benchmark
-- Check for a linter
+- richards
 
 TRY: 
 - different memory management (simple *)
 
 
+CALL MONDAY:
+- .fill (Scheduler) I use for loop
+-
 
 
 
@@ -43,11 +42,6 @@ Second part
 Monday Call KeyPoint:
 
 - check python for Harness
-- CD::Motion Problem with  NULL return. I return shared_ptr actuall to return NULL object
-- Create a bool valid and set it to true when initialise it ?
-- I use Class{} which is the class with default-initialized member
-- Same in List.cpp for Element and TowerDisk
-- Instance of itself must be a pointer
 
 
 TIPS : 

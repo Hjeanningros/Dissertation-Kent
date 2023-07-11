@@ -1,82 +1,73 @@
-#include "RBObject.cpp"
-#include "Packet.cpp"
+#include "TaskState.h"
 
-namespace richards {
-    class TaskState : public RBObject {
-        private: 
+namespace richards {        
+    bool TaskState::isPacketPending() const {
+        return _packetPending; 
+    }
 
-            bool _packetPending;
-            bool _taskWaiting;
-            bool _taskHolding;
+    bool TaskState::isTaskHolding() const {
+        return _taskHolding;   
+    }
 
-        public: 
-        
-            bool isPacketPending() { 
-                return _packetPending; 
-            }
+    bool TaskState::isTaskWaiting() const {
+        return _taskWaiting;   
+    }
 
-            bool isTaskHolding() { 
-                return _taskHolding;   
-            }
-            bool isTaskWaiting() { 
-                return _taskWaiting;   
-            }
+    void TaskState::setTaskHolding(bool b) { 
+        _taskHolding = b; 
+    }
 
-            void setTaskHolding(bool b) { 
-                _taskHolding = b; 
-            }
-            void setTaskWaiting(bool b) { 
-                _taskWaiting = b; 
-            }
+    void TaskState::setTaskWaiting(bool b) { 
+        _taskWaiting = b; 
+    }
 
-            void setPacketPending(bool b) { 
-                _packetPending = b; 
-            }
+    void TaskState::setPacketPending(bool b) { 
+        _packetPending = b; 
+    }
 
-            void packetPending() {
-                _packetPending = true;
-                _taskWaiting = false;
-                _taskHolding = false;
-            }
+    void TaskState::packetPending() {
+        _packetPending = true;
+        _taskWaiting = false;
+        _taskHolding = false;
+    }
 
-            void running() {
-                _packetPending = _taskWaiting = _taskHolding = false;
-            }
+    void TaskState::running() {
+        _packetPending = _taskWaiting = _taskHolding = false;
+    }
 
-        void waiting() {
-            _packetPending = _taskHolding = false;
+    void TaskState::waiting() {
+        _packetPending = _taskHolding = false;
             _taskWaiting = true;
-        }
+    }
 
-        void waitingWithPacket() {
-            _taskHolding = false;
-            _taskWaiting = _packetPending = true;
-        }
+    void TaskState::waitingWithPacket() {
+        _taskHolding = false;
+        _taskWaiting = _packetPending = true;
+    }
 
-        bool isTaskHoldingOrWaiting() {
-            return _taskHolding || (!_packetPending && _taskWaiting);
-        }
+    bool TaskState::isTaskHoldingOrWaiting() const {
+        return _taskHolding || (!_packetPending && _taskWaiting);
+    }
 
-        bool isWaitingWithPacket() {
-            return _packetPending && _taskWaiting && !_taskHolding;
-        }
+    bool TaskState::isWaitingWithPacket() const {
+        return _packetPending && _taskWaiting && !_taskHolding;
+    }
 
-        static TaskState createRunning() {
-            TaskState t = TaskState();
-            t.running();
-            return t;
-        }
+    std::shared_ptr<TaskState> TaskState::createRunning() {
+        std::shared_ptr<TaskState> t = std::make_shared<TaskState>();
+        t->running();
+        return t;
+    }
 
-        static TaskState createWaiting() {
-            TaskState t = TaskState();
-            t.waiting();
-            return t;
-        }
+    std::shared_ptr<TaskState> TaskState::createWaiting() {
+        std::shared_ptr<TaskState> t = std::make_shared<TaskState>();
+        t->waiting();
+        return t;
+    }
 
-        static TaskState createWaitingWithPacket() {
-            TaskState t = TaskState();
-            t.waitingWithPacket();
-            return t;
-        }
-    };
-}
+    std::shared_ptr<TaskState> TaskState::createWaitingWithPacket() {
+        std::shared_ptr<TaskState> t = std::make_shared<TaskState>();
+        t->waitingWithPacket();
+        return t;
+    }
+};

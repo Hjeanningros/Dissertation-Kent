@@ -1,5 +1,4 @@
-#include "RBObject.cpp"
-#include "Packet.cpp"
+#include "RBObject.h"
 
 namespace richards {
     class IdleTaskDataRecord : public RBObject {
@@ -8,7 +7,13 @@ namespace richards {
             int _control;
             int _count;
 
-            int getControl() { 
+        public:
+            IdleTaskDataRecord() {
+                _control = 1;
+                _count = 10000;
+            }
+            
+            int getControl() const {
                 return _control; 
             }
 
@@ -16,17 +21,12 @@ namespace richards {
                 _control = aNumber;
             }
 
-            int getCount() { 
+            int getCount() const {
                 return _count; 
             }
         
             void setCount(int aCount) { 
                 _count = aCount; 
-            }
-
-            IdleTaskDataRecord() {
-                _control = 1;
-                _count = 10000;
             }
     };
 }

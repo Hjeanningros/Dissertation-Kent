@@ -18,7 +18,6 @@ class Mandelbrot : public Benchmark {
 
             std::cout << "No verification result for " << innerIterations << " found" << std::endl;
             std::cout << "Result is: " << result << std::endl;
-
             return false;
         }
 

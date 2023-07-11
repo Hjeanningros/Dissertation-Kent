@@ -1,5 +1,4 @@
-#include "RBObject.cpp"
-#include "Packet.cpp"
+#include "RBObject.h"
 
 namespace richards {
     class WorkerTaskDataRecord : public  RBObject {
@@ -8,20 +7,20 @@ namespace richards {
             int _count;
 
         public:
-            WorkerT askDataRecord() {
+            WorkerTaskDataRecord() {
                 _destination = HANDLER_A;
                 _count = 0;
             }
                 
-            int getCount() { 
+            int getCount() const {
                 return _count; 
             }
 
-            void setCount(final int aCount) { 
+            void setCount(int aCount) { 
                 _count = aCount; 
             }
 
-            int getDestination() { 
+            int getDestination() const {
                 return _destination; 
             }
 

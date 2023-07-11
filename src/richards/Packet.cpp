@@ -1,66 +1,48 @@
-#include <vector>
-#include "RBObject.cpp"
-#include <memory>
-#include <string>
+#include "Packet.h"
 
 namespace richards {
-
-    class Packet : public RBObject {
-        private:
-            std::shared_ptr<Packet> _link;
-            int _identity;
-            int _kind;
-            int _datum;
-            std::vector<int> _data;
-
-
-        public:
-            static const int DATA_SIZE = 4;
-
-            Packet(Packet link, int identity, int kind) {
-                _link = std::make_shared<Packet>(link);
-                _identity = identity;
-                _kind = kind;
-                _datum = 0;
-                _data = std::vector<int>(DATA_SIZE);
-            }
-
-            std::vector<int> getData() { 
-                return _data; 
-            }
-
-            int getDatum() { 
-                return _datum; 
-            }
-
-            void setDatum(int someData) { 
-                _datum = someData; 
-            }
-
-
-            int getIdentity() { 
-                return _identity; 
-            }
-            
-            void setIdentity(int anIdentity) { 
-                _identity = anIdentity; 
-            }
-
-            int getKind() { 
-                return _kind; 
-            }
-            
-            std::shared_ptr<Packet> getLink() { 
-                return _link; 
-            }
-            
-            void setLink(Packet aLink) { 
-                _link = std::make_shared<Packet>(aLink); 
-            }
-
-            std::string toString() {
-                return "Packet id: " + _identity + " kind: " + _kind;
-            }
+    Packet::Packet(std::shared_ptr<Packet> link, int identity, int kind) {
+        _link = link;
+        _identity = identity;
+        _kind = kind;
+        _datum = 0;
+        _data = std::vector<int>(DATA_SIZE);
     }
 
+    std::vector<int> Packet::getData() { 
+        return _data; 
+    }
+
+    int Packet::getDatum() const {
+        return _datum; 
+    }
+
+    void Packet::setDatum(int someData) { 
+        _datum = someData; 
+    }
+
+
+    int Packet::getIdentity() const {
+        return _identity; 
+    }
+            
+    void Packet::setIdentity(int anIdentity) { 
+        _identity = anIdentity; 
+    }
+
+    int Packet::getKind() const {
+        return _kind; 
+    }
+            
+    std::shared_ptr<Packet> Packet::getLink() { 
+        return _link; 
+    }
+            
+    void Packet::setLink(std::shared_ptr<Packet> aLink) { 
+        _link = aLink;
+    }
+
+    std::string Packet::toString() const {
+        return "Packet id: " + std::to_string(_identity) + " kind: " + std::to_string(_kind);
+    }
 }
