@@ -37,7 +37,7 @@ namespace richards {
 
     void TaskState::waiting() {
         _packetPending = _taskHolding = false;
-            _taskWaiting = true;
+        _taskWaiting = true;
     }
 
     void TaskState::waitingWithPacket() {

@@ -52,7 +52,7 @@ namespace richards {
                         return markWaiting();
                     } else {
                         dataRecord->setPending(NO_WORK);
-                        return queuePacket(workPacket);
+                        return queuePacket(functionWork);
                     }
                 } else {
                     dataRecord->setPending(functionWork);
@@ -256,7 +256,7 @@ namespace richards {
                     if (TRACING) {
                         trace(_currentTaskIdentity);
                     }
-
+                    std::cout << _currentTaskIdentity << std::endl;
                     _currentTask = _currentTask->runTask();
                 }
             }

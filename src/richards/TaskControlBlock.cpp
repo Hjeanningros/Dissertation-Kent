@@ -55,7 +55,7 @@ namespace richards {
                 return _priority; 
             }
 
-            std::shared_ptr<TaskControlBlock> addInputAndCheckPriority(const std::shared_ptr<Packet>& packet, std::shared_ptr<TaskControlBlock> oldTask) {
+            std::shared_ptr<TaskControlBlock> addInputAndCheckPriority(std::shared_ptr<Packet> packet, std::shared_ptr<TaskControlBlock> oldTask) {
                 if (NO_WORK == _input) {
                     _input = packet;
                     setPacketPending(true);
