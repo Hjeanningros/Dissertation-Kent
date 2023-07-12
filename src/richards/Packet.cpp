@@ -1,8 +1,10 @@
 #include "Packet.h"
 
+#include <utility>
+
 namespace richards {
     Packet::Packet(std::shared_ptr<Packet> link, int identity, int kind) {
-        _link = link;
+        _link = std::move(link);
         _identity = identity;
         _kind = kind;
         _datum = 0;
@@ -39,7 +41,7 @@ namespace richards {
     }
             
     void Packet::setLink(std::shared_ptr<Packet> aLink) { 
-        _link = aLink;
+        _link = std::move(aLink);
     }
 
     std::string Packet::toString() const {

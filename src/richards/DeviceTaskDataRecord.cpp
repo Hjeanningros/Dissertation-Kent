@@ -17,7 +17,7 @@ namespace richards {
             }
             
             void setPending(std::shared_ptr<Packet> packet) {
-                _pending = packet;
+                _pending = std::move(packet);
             }
     };
 }

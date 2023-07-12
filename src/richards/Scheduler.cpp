@@ -1,4 +1,5 @@
 #include "RBObject.h"
+#include <utility>
 #include <vector>
 #include "DeviceTaskDataRecord.cpp"
 #include "TaskControlBlock.cpp"
@@ -15,7 +16,7 @@ namespace richards {
 
             std::shared_ptr<TaskControlBlock> _taskList;
             std::shared_ptr<TaskControlBlock> _currentTask;
-            int _currentTaskIdentity;
+            int _currentTaskIdentity{};
             std::vector<std::shared_ptr<TaskControlBlock>> _taskTable;
             int _queuePacketCount;
             int _holdCount;
@@ -43,10 +44,10 @@ namespace richards {
         void createDevice(int identity, int priority, std::shared_ptr<Packet> workPacket, std::shared_ptr<TaskState> state) {
             std::shared_ptr<DeviceTaskDataRecord> data = std::make_shared<DeviceTaskDataRecord>();
 
-            createTask(identity, priority, workPacket, state,
+            createTask(identity, priority, std::move(workPacket), std::move(state),
                         [&](std::shared_ptr<Packet> workArg, std::shared_ptr<RBObject> wordArg) -> std::shared_ptr<TaskControlBlock> {
                 std::shared_ptr<DeviceTaskDataRecord> dataRecord = std::dynamic_pointer_cast<DeviceTaskDataRecord>(wordArg);
-                std::shared_ptr<Packet> functionWork = workArg;
+                std::shared_ptr<Packet> functionWork = std::move(workArg);
                 if (NO_WORK == functionWork) {
                     if (NO_WORK == (functionWork = dataRecord->getPending())) {
                         return markWaiting();
@@ -69,7 +70,7 @@ namespace richards {
 
             std::shared_ptr<HandlerTaskDataRecord> data = std::make_shared<HandlerTaskDataRecord>();
 
-            createTask(identity, priority, workPaket, state,
+            createTask(identity, priority, std::move(workPaket), std::move(state),
                         [&](std::shared_ptr<Packet> work, std::shared_ptr<RBObject> word) -> std::shared_ptr<TaskControlBlock> {
                 std::shared_ptr<HandlerTaskDataRecord> dataRecord = std::dynamic_pointer_cast<HandlerTaskDataRecord>(word);
                 if (NO_WORK != work) {
@@ -108,7 +109,7 @@ namespace richards {
 
                 std::shared_ptr<IdleTaskDataRecord> data = std::make_shared<IdleTaskDataRecord>();
 
-                createTask(identity, priority, work, state,
+                createTask(identity, priority, std::move(work), std::move(state),
                             [&](std::shared_ptr<Packet> workArg, std::shared_ptr<RBObject> wordArg) -> std::shared_ptr<TaskControlBlock> {
                     std::shared_ptr<IdleTaskDataRecord> dataRecord = std::dynamic_pointer_cast<IdleTaskDataRecord>(wordArg);
                     dataRecord->setCount(dataRecord->getCount() - 1);
@@ -132,7 +133,7 @@ namespace richards {
 
         void createTask(int identity, int priority,
             std::shared_ptr<Packet> work, std::shared_ptr<TaskState> state,
-            std::function<std::shared_ptr<TaskControlBlock>(std::shared_ptr<Packet> work, std::shared_ptr<RBObject> word)> aBlock, 
+            std::function<std::shared_ptr<TaskControlBlock>(std::shared_ptr<Packet> work, std::shared_ptr<RBObject> word)> aBlock,
             std::shared_ptr<RBObject> data) {
 
             std::shared_ptr<TaskControlBlock> t = std::make_shared<TaskControlBlock>(_taskList, identity,
@@ -146,7 +147,7 @@ namespace richards {
 
             std::shared_ptr<WorkerTaskDataRecord> dataRecord = std::make_shared<WorkerTaskDataRecord>();
 
-            createTask(identity, priority, workPaket, state,
+            createTask(identity, priority, std::move(workPaket), std::move(state),
                 [&](std::shared_ptr<Packet> work, std::shared_ptr<RBObject> word) -> std::shared_ptr<TaskControlBlock> {
                 std::shared_ptr<WorkerTaskDataRecord> data = std::dynamic_pointer_cast<WorkerTaskDataRecord>(word);
                 if (NO_WORK == work) {

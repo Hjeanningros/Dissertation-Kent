@@ -3,6 +3,7 @@
 #include "Packet.h"
 #include <functional>
 #include <utility>
+#include <iostream>
 
 namespace richards {
     class TaskControlBlock : public TaskState {
@@ -18,29 +19,30 @@ namespace richards {
         public:
 
             explicit TaskControlBlock(TaskControlBlock* task) {
-                _link = task->_link;
+                std::cout << "ici " << std::endl;
+                _link = std::move(task->_link);
                 _identity = task->_identity;
                 _priority = task->_priority;
-                _input = task->_input;
+                _input = std::move(task->_input);
                 setPacketPending(task->isPacketPending());
                 setTaskWaiting(task->isTaskWaiting());
                 setTaskHolding(task->isTaskHolding());
-                _function = task->_function;
-                _handle = task->_handle;
+                _function = std::move(task->_function);
+                _handle = std::move(task->_handle);
             }
 
             TaskControlBlock(std::shared_ptr<TaskControlBlock> aLink, int anIdentity, int aPriority, std::shared_ptr<Packet> anInitialWorkQueue,
                     const std::shared_ptr<TaskState>& anInitialState, std::function<std::shared_ptr<TaskControlBlock>(std::shared_ptr<Packet> work, std::shared_ptr<RBObject> word)> aBlock,
                     std::shared_ptr<RBObject> aPrivateData) {
-                _link = aLink;
+                _link = std::move(aLink);
                 _identity = anIdentity;
                 _priority = aPriority;
-                _input = anInitialWorkQueue;
+                _input = std::move(anInitialWorkQueue);
                 setPacketPending(anInitialState->isPacketPending());
                 setTaskWaiting(anInitialState->isTaskWaiting());
                 setTaskHolding(anInitialState->isTaskHolding());
-                _function = aBlock;
-                _handle = aPrivateData;
+                _function = std::move(aBlock);
+                _handle = std::move(aPrivateData);
             }
 
             int getIdentity() const {
@@ -60,7 +62,7 @@ namespace richards {
                     _input = packet;
                     setPacketPending(true);
                     if (_priority > oldTask->getPriority()) { 
-                        return std::make_shared<TaskControlBlock>(this); 
+                        return std::make_shared<TaskControlBlock>(this);
                     }
                 } else {
                     _input = append(packet, _input);
@@ -84,4 +86,5 @@ namespace richards {
                 return _function(message, _handle);
             }
     };
+
 }

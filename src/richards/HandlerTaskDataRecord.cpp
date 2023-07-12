@@ -1,5 +1,6 @@
 #include "Packet.h"
 #include <memory>
+#include <utility>
 
 namespace richards {
     class HandlerTaskDataRecord : public RBObject {
@@ -20,11 +21,11 @@ namespace richards {
             }
 
             void deviceIn(std::shared_ptr<Packet> aPacket) { 
-                _deviceIn = aPacket; 
+                _deviceIn = std::move(aPacket);
             }
 
             void deviceInAdd(std::shared_ptr<Packet> packet) {
-                _deviceIn = append(packet, _deviceIn);
+                _deviceIn = append(std::move(packet), _deviceIn);
             }
 
             std::shared_ptr<Packet> workIn() { 
@@ -32,11 +33,11 @@ namespace richards {
             }
             
             void workIn(std::shared_ptr<Packet> aWorkQueue) { 
-                _workIn = aWorkQueue; 
+                _workIn = std::move(aWorkQueue);
             }
 
             void workInAdd(std::shared_ptr<Packet> packet) {
-                _workIn = append(packet, _workIn);
+                _workIn = append(std::move(packet), _workIn);
             }
     };
 }
