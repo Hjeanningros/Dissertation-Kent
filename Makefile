@@ -9,16 +9,7 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/Sieve.cpp							\
 			src/Permute.cpp							\
 			src/Queens.cpp							\
-			src/Richards.cpp						\
-			src/richards/DeviceTaskDataRecord.cpp	\
-			src/richards/HandlerTaskDataRecord.cpp	\
-			src/richards/IdleTaskDataRecord.cpp		\
-			src/richards/Packet.cpp					\
-			src/richards/RBObject.cpp				\
-			src/richards/TaskControlBlock.cpp		\
-			src/richards/TaskState.cpp				\
-			src/richards/WorkerTaskDataRecord.cpp	\
-			src/richards/Scheduler.cpp	
+
 
 
 
