@@ -2,6 +2,8 @@
 #include <iostream>
 #include "Benchmark.cpp"
 
+using namespace std;
+
 class Mandelbrot : public Benchmark {
 
     private:
@@ -16,8 +18,8 @@ class Mandelbrot : public Benchmark {
                 return result == 128;
             }
 
-            std::cout << "No verification result for " << innerIterations << " found" << std::endl;
-            std::cout << "Result is: " << result << std::endl;
+            cout << "No verification result for " << innerIterations << " found" << endl;
+            cout << "Result is: " << result << endl;
             return false;
         }
 
@@ -85,11 +87,11 @@ class Mandelbrot : public Benchmark {
             return verifyResult(mandelbrot(innerIterations), innerIterations);
         }
 
-        std::any benchmark() override {
+        any benchmark() override {
             throw Error("Should never be reached");
         }
 
-        bool verifyResult(std::any result) override {
+        bool verifyResult(any result) override {
             throw Error("Should never be reached");
         }
 };

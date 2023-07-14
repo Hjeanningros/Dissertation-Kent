@@ -3,6 +3,8 @@
 #include "Benchmark.cpp"
 #include "som/Error.cpp"
 
+using namespace std;
+
 class Towers : public Benchmark
 {
     private:
@@ -11,7 +13,7 @@ class Towers : public Benchmark
 
             private: 
                 int _size;
-                std::shared_ptr<TowersDisk> _next{};
+                shared_ptr<TowersDisk> _next{};
 
             public:
 
@@ -25,20 +27,20 @@ class Towers : public Benchmark
                     return _size;
                 }
 
-                std::shared_ptr<TowersDisk> getNext() {
+                shared_ptr<TowersDisk> getNext() {
                     return _next;
                 }
 
-                void setNext(std::shared_ptr<TowersDisk> value) {
-                    _next = std::move(value);
+                void setNext(shared_ptr<TowersDisk> value) {
+                    _next = move(value);
                 }
         };
 
-        std::vector<std::shared_ptr<TowersDisk>> _piles;
+        vector<shared_ptr<TowersDisk>> _piles;
         int _movesDone;
 
-        void pushDisk(std::shared_ptr<TowersDisk> disk, int pile) {
-            std::shared_ptr<TowersDisk> top = _piles[pile];
+        void pushDisk(shared_ptr<TowersDisk> disk, int pile) {
+            shared_ptr<TowersDisk> top = _piles[pile];
 
             if (!(top == nullptr) && (disk->getSize() >= top->getSize())) {
                 throw Error("Cannot put a big disk on a smaller one");
@@ -48,8 +50,8 @@ class Towers : public Benchmark
             _piles[pile] = disk;
         }
 
-        std::shared_ptr<TowersDisk> popDiskFrom(int pile) {
-            std::shared_ptr<TowersDisk> top = _piles[pile];
+        shared_ptr<TowersDisk> popDiskFrom(int pile) {
+            shared_ptr<TowersDisk> top = _piles[pile];
 
             if (top == nullptr) {
                 throw Error("Attempting to remove a disk from an empty pile");
@@ -67,7 +69,7 @@ class Towers : public Benchmark
 
         void buildTowerAt(int pile, int disks) {
             for (int i = disks; i >= 0; i--) {
-                pushDisk(std::make_shared<TowersDisk>(i), pile);
+                pushDisk(make_shared<TowersDisk>(i), pile);
             }
         }
 
@@ -83,8 +85,8 @@ class Towers : public Benchmark
         }
 
     public:
-        std::any benchmark() override {
-            _piles = std::vector<std::shared_ptr<TowersDisk>>(3);
+        any benchmark() override {
+            _piles = vector<shared_ptr<TowersDisk>>(3);
             buildTowerAt(0, 13);
             _movesDone = 0;
             moveDisks(13, 0 ,1);
@@ -92,8 +94,8 @@ class Towers : public Benchmark
             return _movesDone;
         }
 
-        bool verifyResult(std::any result) override {
-            int result_cast = std::any_cast<int>(result);
+        bool verifyResult(any result) override {
+            int result_cast = any_cast<int>(result);
             return 8191 == result_cast;
         }
 };

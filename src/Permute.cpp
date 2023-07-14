@@ -1,11 +1,13 @@
 #include <vector>
 #include "Benchmark.cpp"
 
+using namespace std;
+
 class Permute : public Benchmark
 {
     private:
         int _count;
-        std::vector<int> _v{std::vector<int>(5)};
+        vector<int> _v{vector<int>(5)};
 
 
         void swap(int i, int j) {
@@ -15,7 +17,7 @@ class Permute : public Benchmark
         }
 
     public:
-        std::any benchmark() override {
+        any benchmark() override {
             _count = 0;
             permute(6);
             return _count;
@@ -34,8 +36,8 @@ class Permute : public Benchmark
             }
         }
     
-        bool verifyResult(std::any result) override {
-            int result_cast = std::any_cast<int>(result);
+        bool verifyResult(any result) override {
+            int result_cast = any_cast<int>(result);
             return result_cast == 8660;
         }
 };

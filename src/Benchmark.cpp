@@ -4,10 +4,13 @@
 #include <any>
 #include <memory>
 
+using namespace std;
+
+
 class Benchmark {
     public: 
-        virtual std::any benchmark() = 0; // std::any instead ? return std::shared_ptr<void> ? Try without shared pointer
-        virtual bool verifyResult(std::any result) = 0; // as argument std::shared_ptr<void> ?
+        virtual any benchmark() = 0;
+        virtual bool verifyResult(any result) = 0;
 
         virtual bool innerBenchmarkLoop(int innerIterations) {
             for (int i = 0; i < innerIterations; i++) {

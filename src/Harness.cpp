@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+using namespace std;
+
 class Harness {
     public:
 
@@ -9,20 +11,20 @@ class Harness {
             Run run = Run(args[1]);
 
             if (argc > 2) {
-                run.setNumIterations(std::atoi(args[2]));
+                run.setNumIterations(atoi(args[2]));
                 if (argc > 3) {
-                    run.setInnerIterations(std::atoi(args[3]));
+                    run.setInnerIterations(atoi(args[3]));
                 }
             }
             return run;
         }
 
         static void printUsage() {
-            std::cout << "Harness [benchmark] [num-iterations [inner-iter]]" << std::endl << std::endl;
-            std::cout << "  benchmark      - benchmark class name " << std::endl;
-            std::cout << "  num-iterations - number of times to execute benchmark, default: 1" << std::endl;
-            std::cout << "  inner-iter     - number of times the benchmark is executed in an inner loop, " << std::endl;
-            std::cout << "                   which is measured in total, default: 1" << std::endl;
+            cout << "Harness [benchmark] [num-iterations [inner-iter]]" << endl << endl;
+            cout << "  benchmark      - benchmark class name " << endl;
+            cout << "  num-iterations - number of times to execute benchmark, default: 1" << endl;
+            cout << "  inner-iter     - number of times the benchmark is executed in an inner loop, " << endl;
+            cout << "                   which is measured in total, default: 1" << endl;
         }
 
 

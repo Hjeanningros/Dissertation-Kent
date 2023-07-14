@@ -2,21 +2,21 @@
 #ifndef ERROR
 #define ERROR
 
-
 #include <string>
 
+using namespace std;
 
-class Error : virtual public std::exception {
+class Error : virtual public exception {
     private:
-        std::string _what;
+        string _what;
 
     public:
-        Error(std::string const &what) {
+        Error(string const &what) {
             _what = what;
         }
         
         Error(const char *what) {
-            _what = std::string(what);
+            _what = string(what);
         }
 
         const char *what() const throw() {

@@ -14,9 +14,11 @@ TRY:
 
 CALL MONDAY:
 - .fill (Scheduler) I use for loop
--
+- I had conversation about low level language, more eco friendly
+- Problem with CD: template, sometimes bool and sometimes shared_ptr -> compiler don't like it
 
-
+RICHARDS DEBUG:
+- std::make_shared<...>(args) instead of this;
 
 
 

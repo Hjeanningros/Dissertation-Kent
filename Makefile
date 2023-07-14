@@ -8,7 +8,7 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/Benchmark.cpp						\
 			src/Sieve.cpp							\
 			src/Permute.cpp							\
-			src/Queens.cpp							\
+			src/Queens.cpp							
 
 
 

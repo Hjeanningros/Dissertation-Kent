@@ -4,6 +4,8 @@
 #include "Benchmark.cpp"
 #include "som/Random.cpp"
 
+using namespace std;
+
 class Bounce : public Benchmark 
 {
     private:
@@ -17,7 +19,7 @@ class Bounce : public Benchmark
 
             public:
             
-            Ball(std::shared_ptr<Random> random) {
+            Ball(shared_ptr<Random> random) {
                 _x = random->next() % 500;
                 _y = random->next() % 500;
                 _xVel = (random->next() % 300) - 150;
@@ -58,11 +60,11 @@ class Bounce : public Benchmark
 
 
     public:
-        std::any benchmark() override {
-            std::shared_ptr<Random> random = std::make_shared<Random>();
+        any benchmark() override {
+            shared_ptr<Random> random = make_shared<Random>();
             int ballCount = 100;
             int bounces = 0;
-            std::vector<Ball> balls;
+            vector<Ball> balls;
 
             for (int i = 0; i < 100; i++)
                 balls.push_back(Ball(random));
@@ -78,8 +80,8 @@ class Bounce : public Benchmark
             return bounces;
         }
         
-        bool verifyResult(std::any result) override {
-            int result_cast = std::any_cast<int>(result);
+        bool verifyResult(any result) override {
+            int result_cast = any_cast<int>(result);
             return 1331 == result_cast;
         }
 };

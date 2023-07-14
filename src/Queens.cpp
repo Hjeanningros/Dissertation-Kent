@@ -2,19 +2,21 @@
 #include "Benchmark.cpp"
 #include <iostream>
 
+using namespace std;
+
 class Queens : public Benchmark
 {
     private:
-        std::vector<bool> _freeMaxs;
-        std::vector<bool> _freeRows;
-        std::vector<bool> _freeMins;
-        std::vector<int> _queenRows;
+        vector<bool> _freeMaxs;
+        vector<bool> _freeRows;
+        vector<bool> _freeMins;
+        vector<int> _queenRows;
 
         bool queens() {
             _freeRows.assign(8, true);
 
             //for (int i = 0; i < 8; i++)
-            //    std::cout << i << _freeMaxs[i] << std::endl;
+            //    cout << i << _freeMaxs[i] << endl;
             _freeMaxs.assign(16, true);
             _freeMins.assign(16, true);
             _queenRows.assign(8, -1);
@@ -52,7 +54,7 @@ class Queens : public Benchmark
 
 
     public:
-        std::any benchmark() override {
+        any benchmark() override {
             bool result = true;
             for (int i = 0; i < 10; i++) {
                 result = result && queens();
@@ -60,8 +62,8 @@ class Queens : public Benchmark
             return result;
         }
     
-        bool verifyResult(std::any result) override {
-            bool result_cast = std::any_cast<bool>(result);
+        bool verifyResult(any result) override {
+            bool result_cast = any_cast<bool>(result);
             return result_cast;
         }
 };

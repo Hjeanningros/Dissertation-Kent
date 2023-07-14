@@ -2,6 +2,8 @@
 #include <utility>
 #include "Benchmark.cpp"
 
+using namespace std;
+
 class List : public Benchmark 
 {
     private: 
@@ -9,8 +11,8 @@ class List : public Benchmark
         class Element {
 
             private : 
-                int _val; // Cange by int use to be std::shared_ptr<void> to represent an object but the vaue will always be an int (to confirm)
-                std::shared_ptr<Element> _next;
+                int _val; // Cange by int use to be shared_ptr<void> to represent an object but the vaue will always be an int (to confirm)
+                shared_ptr<Element> _next;
 
             public :
                 Element() = default;
@@ -34,28 +36,28 @@ class List : public Benchmark
                     _val = v;
                 }
 
-                std::shared_ptr<Element> getNext() {
+                shared_ptr<Element> getNext() {
                     return _next;
                 }
 
-                void  setNext(std::shared_ptr<Element> e) {
+                void  setNext(shared_ptr<Element> e) {
                     _next = e;
                 }
         };
 
-        std::shared_ptr<Element> makeList(int length) {
+        shared_ptr<Element> makeList(int length) {
             if (length == 0) {
                 return {};
             } else {
-                std::shared_ptr<Element> e = std::make_shared<Element>(length); // Length Represente which value
+                shared_ptr<Element> e = make_shared<Element>(length); // Length Represente which value
                 e->setNext(makeList(length - 1));
                 return e;
             }
         }
 
-        static bool isShorterThan(std::shared_ptr<Element> x, std::shared_ptr<Element> y) {
-            std::shared_ptr<Element> xTail = x;
-            std::shared_ptr<Element> yTail = y;
+        static bool isShorterThan(shared_ptr<Element> x, shared_ptr<Element> y) {
+            shared_ptr<Element> xTail = x;
+            shared_ptr<Element> yTail = y;
 
             while (yTail != nullptr) {
                 if (xTail == nullptr)
@@ -66,7 +68,7 @@ class List : public Benchmark
             return false;
         }
 
-        std::shared_ptr<Element> tail(std::shared_ptr<Element> x, std::shared_ptr<Element> y, std::shared_ptr<Element> z) {
+        shared_ptr<Element> tail(shared_ptr<Element> x, shared_ptr<Element> y, shared_ptr<Element> z) {
             if (isShorterThan(y, x)) {
                 return tail(tail(x->getNext(), y, z),
                     tail(y->getNext(), z, x),
@@ -78,13 +80,13 @@ class List : public Benchmark
 
         public :
 
-            std::any benchmark() override {
-                std::shared_ptr<Element> result = tail(makeList(15), makeList(10), makeList(6));
+            any benchmark() override {
+                shared_ptr<Element> result = tail(makeList(15), makeList(10), makeList(6));
                 return result->length();
             }
 
-            bool verifyResult(std::any result) override {
-                int result_cast = std::any_cast<int>(result);
+            bool verifyResult(any result) override {
+                int result_cast = any_cast<int>(result);
                 return 10 == result_cast;
             }
 };
