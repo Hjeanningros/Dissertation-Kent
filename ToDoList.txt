@@ -12,6 +12,7 @@ TRY:
 - different memory management (simple *)
 
 
+
 CALL MONDAY:
 - .fill (Scheduler) I use for loop
 - I had conversation about low level language, more eco friendly
@@ -19,7 +20,12 @@ CALL MONDAY:
 
 RICHARDS DEBUG:
 - std::make_shared<...>(args) instead of this;
+- dynamic cast for *this (example of poiter cast in CD or Richards Benchmark)
+- Try a copy constructor for *this
 
+DELTABLUE DELTABLUE:
+- Strengh Dictionnary and unordered_map
+- ENUM nullptr
 
 
 
