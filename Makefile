@@ -8,7 +8,16 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/Benchmark.cpp						\
 			src/Sieve.cpp							\
 			src/Permute.cpp							\
-			src/Queens.cpp							
+			src/deltablue/AbstractConstraint.cpp	\
+			src/deltablue/BinaryConstraint.cpp		\
+			src/deltablue/EditConstraint.cpp		\
+			src/deltablue/EqualityConstraint.cpp	\
+			src/deltablue/Plan.cpp					\
+			src/deltablue/ScaleConstraint.cpp		\
+			src/deltablue/StayConstraint.cpp		\
+			src/deltablue/UnaryConstraint.cpp		\
+			src/deltablue/Variable.cpp
+
 
 
 
