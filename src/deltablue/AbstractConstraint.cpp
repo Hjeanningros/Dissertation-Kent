@@ -1,8 +1,3 @@
-#include "Strength.h"
-#include <memory>
-#include "../som/Error.cpp"
-#include "Variable.cpp"
-#include "AbstractConstraint.h"
 #include "Planner.cpp"
 
 using namespace std;

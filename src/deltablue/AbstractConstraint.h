@@ -3,7 +3,6 @@
 
 #include <functional>
 #include <memory>
-#include "Strength.h"
 #include "../som/Error.cpp"
 #include "Variable.h"
 #include "Direction.h"

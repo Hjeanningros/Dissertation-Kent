@@ -1,5 +1,5 @@
 #include <memory>
-#include "Variable.h"
+#include "AbstractConstraint.h"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ namespace deltablue {
         public:
             UnaryConstraint(shared_ptr<Variable> v, shared_ptr<Sym> strength, shared_ptr<Planner> planner)
                 : AbstractConstraint(strength) {
-                _output = v
+                _output = v;
                 _satisfied = false;
                 addConstraint(planner);
             }

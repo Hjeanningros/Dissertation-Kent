@@ -11,7 +11,7 @@ namespace deltablue {
 
         public:
             BinaryConstraint(shared_ptr<Variable> var1, shared_ptr<Variable> var2,
-                shared_ptr<Strength::Sym> strength/*, shared_ptr<Planner> planner*/) : AbstractConstraint(strength){ /// don't use planner ???
+                shared_ptr<Strength::Sym> strength/*, shared_ptr<Planner> planner*/) : AbstractConstraint(strength){ /// don't use planner ??? Probleme with "this"
                 _v1 = var1;
                 _v2 = var2;
                 _direction = NULLPTR;
