@@ -1,6 +1,4 @@
 #include "AbstractConstraint.h"
-#include <vector>
-#include <memory> 
 
 using namespace std;
 
@@ -46,7 +44,7 @@ namespace deltablue {
     }
 
     void Variable::removeConstraint(shared_ptr<AbstractConstraint> c) {
-        _constraints.remove(c);
+        _constraints.erase(remove(_constraints.begin(), _constraints.end(), c), _constraints.end());;
         if (_determinedBy == c) {
           _determinedBy = nullptr;
         }

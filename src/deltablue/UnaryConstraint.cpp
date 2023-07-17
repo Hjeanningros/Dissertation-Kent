@@ -1,73 +1,60 @@
 #include <memory>
-#include "AbstractConstraint.h"
+#include "UnaryConstraint.h"
 
 using namespace std;
 
 namespace deltablue {
-    class UnaryConstraint : public AbstractConstraint {
-        protected:
-            shared_ptr<Variable> _output; // possible output variable
-            bool _satisfied;   // true if I am currently satisfied
+    UnaryConstraint::UnaryConstraint(shared_ptr<Variable> v, shared_ptr<Strength::Sym> strength, shared_ptr<Planner> planner)
+        : AbstractConstraint(strength) {
+        _output = v;
+        _satisfied = false;
+        addConstraint(planner);
+    }
 
-        public:
-            UnaryConstraint(shared_ptr<Variable> v, shared_ptr<Sym> strength, shared_ptr<Planner> planner)
-                : AbstractConstraint(strength) {
-                _output = v;
-                _satisfied = false;
-                addConstraint(planner);
-            }
+    bool UnaryConstraint::isSatisfied() {
+        return _satisfied;
+    }
 
-            virtual ~UnaryConstraint() {}
+    // Add myself to the constraint graph.
+    void UnaryConstraint::addToGraph() {
+        _output->addConstraint(shared_ptr<UnaryConstraint>(this));
+        _satisfied = false;
+    }
 
-            bool isSatisfied() const override {
-                return _satisfied;
-            }
+    // Remove myself from the constraint graph.
+    void UnaryConstraint::removeFromGraph() {
+        if (_output != nullptr) {
+            _output->removeConstraint(shared_ptr<UnaryConstraint>(this));
+        }
+        _satisfied = false;
+    }
 
-            // Add myself to the constraint graph.
-            void addToGraph() override {
-                output->addConstraint(this);
-                _satisfied = false;
-            }
+    Direction UnaryConstraint::chooseMethod(int mark) {
+        _satisfied = (_output->getMark() != mark) && _strength->stronger(_output->getWalkStrength());
+        return NONE;
+    }
 
-            // Remove myself from the constraint graph.
-            void removeFromGraph() override {
-                if (_output != nullptr) {
-                    _output->removeConstraint(this);
-                }
-                _satisfied = false;
-            }
+    void UnaryConstraint::inputsDo(function<void(shared_ptr<Variable>)> fn) {
+        // I have no input variables
+    }
 
-            shared_ptr<Direction> chooseMethod(int mark) override {
-                _satisfied = (_output->getMark() != mark) &&
-                            _strength.stronger(_output->getWalkStrength());
-                return nullptr;
-            }
+    bool UnaryConstraint::inputsHasOne(function<bool(shared_ptr<Variable>)> fn) {
+        return false;
+    }
 
-            virtual void execute() = 0;
+    void UnaryConstraint::markUnsatisfied() {
+        _satisfied = false;
+    }
 
-            void inputsDo(function<void(shared_ptr<Variable>)> fn) override {
-                // I have no input variables
-            }
+    shared_ptr<Variable> UnaryConstraint::getOutput() {
+        return _output;
+    }
 
-            bool inputsHasOne(function<void(shared_ptr<Variable>)> fn) override {
-                return false;
-            }
-
-            void markUnsatisfied() override {
-                _satisfied = false;
-            }
-
-            shared_ptr<Variable> getOutput() override {
-                return _output;
-            }
-
-            void recalculate() override {
-                _output->setWalkStrength(_strength);
-                _output->setStay(!isInput());
-                if (_output->getStay()) {
-                    execute();
-                }
-            }
-
-    };
+    void UnaryConstraint::recalculate() {
+        _output->setWalkStrength(_strength);
+        _output->setStay(!isInput());
+        if (_output->getStay()) {
+            execute();
+        }
+    }
 }

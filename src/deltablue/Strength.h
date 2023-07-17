@@ -35,9 +35,10 @@ namespace deltablue {
             int _arithmeticValue;
             shared_ptr<Sym> _symbolicValue;
 
-            Strength(shared_ptr<Sym> symbolicValue);
 
         public:
+            Strength(shared_ptr<Sym> symbolicValue);
+
             shared_ptr<Strength> _absoluteWeakest;
             shared_ptr<Strength> _required;
 
@@ -76,9 +77,9 @@ namespace deltablue {
                 {make_shared<Sym>(7), make_shared<Strength>(make_shared<Sym>(7))}
             };
 
-            const shared_ptr<Strength> absoluteWeakest = of(make_shared<Sym>(7));
-            const shared_ptr<Strength> required = of(make_shared<Sym>(1));
+            //static Strength absoluteWeakest = of(make_shared<Sym>(7));
+            //const static Strength required = of(make_shared<Sym>(1));
     };
 }
 
-#endif //STRENGTH
+#endif //STRENGTHPLAN

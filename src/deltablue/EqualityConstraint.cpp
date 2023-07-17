@@ -1,4 +1,4 @@
-#include "BinaryConstraint.cpp"
+#include "BinaryConstraint.h"
 #include "Strength.h"
 #include "Direction.h"
 #include <memory>

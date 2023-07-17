@@ -1,4 +1,4 @@
-#include "Planner.cpp"
+#include "Planner.h"
 
 using namespace std;
 
@@ -18,13 +18,13 @@ namespace deltablue {
 
     void AbstractConstraint::addConstraint(shared_ptr<Planner> planner) {
         addToGraph();
-        planner->incrementalAdd(make_shared<AbstractConstraint>(_strength));
+        planner->incrementalAdd(shared_ptr<AbstractConstraint>(this));
     }
 
 
     void AbstractConstraint::destroyConstraint(shared_ptr<Planner> planner) {
         if (isSatisfied()) {
-            planner->incrementalRemove(this);
+            planner->incrementalRemove(shared_ptr<AbstractConstraint>(this));
         }
         removeFromGraph();
     }
@@ -51,8 +51,8 @@ namespace deltablue {
             if (overridden != nullptr) {
                 overridden->markUnsatisfied();
             }
-            out->setDeterminedBy(this);
-            if (!planner->addPropagate(this, mark)) {
+            out->setDeterminedBy(shared_ptr<AbstractConstraint>(this));
+            if (!planner->addPropagate(shared_ptr<AbstractConstraint>(this), mark)) {
                 throw Error("Cycle encountered");
             }
             out->setMark(mark);

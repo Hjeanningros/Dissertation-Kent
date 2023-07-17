@@ -1,45 +1,37 @@
-#include "AbstractConstraint.h"
-
-using namespace std;
+#include "BinaryConstraint.h"
 
 namespace deltablue {
-    class BinaryConstraint: public AbstractConstraint {
-        protected:
-            shared_ptr<Variable> _v1;
-            shared_ptr<Variable> _v2;
-            Direction _direction;
 
-        public:
-            BinaryConstraint(shared_ptr<Variable> var1, shared_ptr<Variable> var2,
+            BinaryConstraint::BinaryConstraint(shared_ptr<Variable> var1, shared_ptr<Variable> var2,
                 shared_ptr<Strength::Sym> strength/*, shared_ptr<Planner> planner*/) : AbstractConstraint(strength){ /// don't use planner ??? Probleme with "this"
                 _v1 = var1;
                 _v2 = var2;
-                _direction = NULLPTR;
+                _direction = NONE;
             }
 
-            bool isSatisfied() override {
-                return _direction != NULLPTR;
+            bool BinaryConstraint::isSatisfied() {
+                return _direction != NONE;
             }
 
-            void addToGraph() override {
-                _v1->addConstraint(std::make_shared<BinaryConstraint>(_v1, _v2, _strength));
-                _v2->addConstraint(std::make_shared<BinaryConstraint>(_v1, _v2, _strength));
-                _direction = NULLPTR;
+            void BinaryConstraint::addToGraph() {
+                _v1->addConstraint(shared_ptr<BinaryConstraint>(this));
+                _v2->addConstraint(shared_ptr<BinaryConstraint>(this));
+                _direction = NONE;
             }
 
-            void removeFromGraph() override {
-                _v1->removeConstraint(std::make_shared<BinaryConstraint>(_v1, _v2, _strength));
-                _v2->removeConstraint(std::make_shared<BinaryConstraint>(_v1, _v2, _strength));
-                _direction = NULLPTR;
+            void BinaryConstraint::removeFromGraph() {
+                _v1->removeConstraint(shared_ptr<BinaryConstraint>(this));
+                _v2->removeConstraint(shared_ptr<BinaryConstraint>(this));
+                _direction = NONE;
             }
 
-            Direction chooseMethod(int mark) override {
+            Direction BinaryConstraint::chooseMethod(int mark) {
                 if (_v1->getMark() == mark) {
                     if (_v2->getMark() != mark && _strength->stronger(_v2->getWalkStrength())) {
                         _direction = FORWARD;
                         return _direction;
                     } else {
-                        _direction = NULLPTR;
+                        _direction = NONE;
                         return _direction;
                     }
                 }
@@ -49,7 +41,7 @@ namespace deltablue {
                         _direction = BACKWARD;
                         return _direction;
                     } else {
-                        _direction = NULLPTR;
+                        _direction = NONE;
                         return _direction;
                     }
                 }
@@ -59,7 +51,7 @@ namespace deltablue {
                         _direction = BACKWARD;
                         return _direction;
                     } else {
-                        _direction = NULLPTR;
+                        _direction = NONE;
                         return _direction;
                     }
                 } else {
@@ -67,13 +59,13 @@ namespace deltablue {
                         _direction = FORWARD;
                         return _direction;
                     } else {
-                        _direction = NULLPTR;
+                        _direction = NONE;
                         return _direction;
                     }
                 }
             }
 
-            void inputsDo(function<void(shared_ptr<Variable>)> fn) override {
+            void BinaryConstraint::inputsDo(function<void(shared_ptr<Variable>)> fn) {
                 if (_direction == FORWARD) {
                     fn(_v1);
                 } else {
@@ -81,7 +73,7 @@ namespace deltablue {
                 }
             }
 
-            bool inputsHasOne(function<bool(shared_ptr<Variable>)> fn) override {
+            bool BinaryConstraint::inputsHasOne(function<bool(shared_ptr<Variable>)> fn) {
                 if (_direction == FORWARD) {
                     return fn(_v1);
                 } else {
@@ -89,15 +81,15 @@ namespace deltablue {
                 }
             }
 
-            void markUnsatisfied() override {
-                _direction = NULLPTR;
+            void BinaryConstraint::markUnsatisfied() {
+                _direction = NONE;
             }
 
-            shared_ptr<Variable> getOutput() override {
+            shared_ptr<Variable> BinaryConstraint::getOutput() {
                 return _direction == FORWARD ? _v2 : _v1;
             }
 
-            void recalculate() override {
+            void BinaryConstraint::recalculate() {
                 shared_ptr<Variable> in;
                 shared_ptr<Variable> out;
 
@@ -115,5 +107,4 @@ namespace deltablue {
                     execute();
                 }
             }
-    };
 }

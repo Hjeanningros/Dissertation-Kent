@@ -1,6 +1,4 @@
-#include <unordered_map>
-#include <memory>
-#include <Strength.h>
+#include "Strength.h"
 
 using namespace std;
 

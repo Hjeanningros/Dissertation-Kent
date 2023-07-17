@@ -1,23 +1,15 @@
-#include <memory>
-#include "UnaryConstraint.cpp"
-#include "Planner.cpp"
-
-using namespace std;
+#include "EditConstraint.h"
 
 namespace deltablue {
-    class EditConstraint: public UnaryConstraint {
-        public:
+    EditConstraint::EditConstraint(shared_ptr<Variable> v, shared_ptr<Strength::Sym> strength, shared_ptr<Planner> planner)
+        : UnaryConstraint(v, strength, planner) {
+    }
 
-            EditConstraint(shared_ptr<Variable> v, shared_ptr<Strenght::Sym> strength, shared_ptr<Planner> planner)
-                        : UnaryConstraint(v, strength, planner) {
-            }
+    bool EditConstraint::isInput() {
+        return true;
+    }
 
-            bool isInput() override {
-                return true;
-            }
-
-            void execute() override {
-                // Edit constraints do nothing.
-            }
-    };
+    void EditConstraint::execute() {
+        // Edit constraints do nothing.
+    }
 }

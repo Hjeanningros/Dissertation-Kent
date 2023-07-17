@@ -1,4 +1,4 @@
-#include "BinaryConstraint.cpp"
+#include "BinaryConstraint.h"
 #include "Variable.h"
 #include <memory>
 
@@ -21,23 +21,25 @@ namespace deltablue {
             }
 
             void addToGraph() override {
-                _v1->addConstraint(this);
-                _v2->addConstraint(this);
-                _scale->addConstraint(this);
-                _offset->addConstraint(this);
-                _direction = NULLPTR;
+
+                //_v1->addConstraint(make_shared<ScaleConstraint>(_v1, _scale, _offset, _v2, _strenght));
+                _v1->addConstraint(shared_ptr<ScaleConstraint>(this));
+                _v2->addConstraint(shared_ptr<ScaleConstraint>(this));
+                _scale->addConstraint(shared_ptr<ScaleConstraint>(this));
+                _offset->addConstraint(shared_ptr<ScaleConstraint>(this));
+                _direction = NONE;
             }
 
             void removeFromGraph() override {
                 if (_v1 != nullptr) 
-                    _v1->removeConstraint(this);
+                    _v1->removeConstraint(shared_ptr<ScaleConstraint>(this));
                 if (_v2 != nullptr) 
-                    _v2->removeConstraint(this);
+                    _v2->removeConstraint(shared_ptr<ScaleConstraint>(this));
                 if (_scale != nullptr) 
-                    _scale->removeConstraint(this);
+                    _scale->removeConstraint(shared_ptr<ScaleConstraint>(this));
                 if (_offset != nullptr) 
-                    _offset->removeConstraint(this);
-                _direction = NULLPTR;
+                    _offset->removeConstraint(shared_ptr<ScaleConstraint>(this));
+                _direction = NONE;
             }
 
             void execute() override {

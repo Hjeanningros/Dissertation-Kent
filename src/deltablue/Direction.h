@@ -3,7 +3,7 @@
 
 namespace deltablue {
     enum Direction {
-        FORWARD, BACKWARD, NULLPTR
+        FORWARD, BACKWARD, NONE
     };
 }
 

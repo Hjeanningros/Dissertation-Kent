@@ -1,6 +1,7 @@
 #ifndef ABSTRACTCONSTRAINT
 #define ABSTRACTCONSTRAINT
 
+#include <vector>
 #include <functional>
 #include <memory>
 #include "../som/Error.cpp"
@@ -16,29 +17,29 @@ namespace deltablue {
     class AbstractConstraint {
         protected:
             shared_ptr<Strength> _strength;
-
+            shared_ptr<Planner> _planer;
         public:
 
 
             AbstractConstraint(shared_ptr<Strength::Sym> strength);
 
             shared_ptr<Strength> getStrength();
-            bool isInput();
+            virtual bool isInput();
             void addConstraint(shared_ptr<Planner> planner);
             void destroyConstraint(shared_ptr<Planner> planner);
             bool inputsKnown(int mark);
             shared_ptr<AbstractConstraint> satisfy(int mark, shared_ptr<Planner> planner);
 
-            virtual bool isSatisfied() = 0;
-            virtual void addToGraph() = 0;
-            virtual void removeFromGraph() = 0;
-            virtual Direction chooseMethod(int mark) = 0;
-            virtual void execute() = 0;
-            virtual void inputsDo(function<void(shared_ptr<Variable>)> fn) = 0;
-            virtual bool inputsHasOne(function<bool(shared_ptr<Variable> )> fn) = 0;
-            virtual void markUnsatisfied() = 0;
-            virtual shared_ptr<Variable> getOutput() = 0;
-            virtual void recalculate() = 0;
+            virtual bool isSatisfied() {};
+            virtual void addToGraph() {};
+            virtual void removeFromGraph() {};
+            virtual Direction chooseMethod(int mark) {};
+            virtual void execute() {};
+            virtual void inputsDo(function<void(shared_ptr<Variable>)> fn) {};
+            virtual bool inputsHasOne(function<bool(shared_ptr<Variable> )> fn) {};
+            virtual void markUnsatisfied() {};
+            virtual shared_ptr<Variable> getOutput() {};
+            virtual void recalculate() {};
 
 
     };
