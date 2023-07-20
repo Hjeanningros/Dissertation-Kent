@@ -14,6 +14,10 @@ namespace deltablue {
             ScaleConstraint(shared_ptr<Variable> src, shared_ptr<Variable> scale, shared_ptr<Variable> offset,
                             shared_ptr<Variable> dest, shared_ptr<Strength::Sym> strength, shared_ptr<Planner> planner)
                 : BinaryConstraint(src, dest, strength/*, planner*/) {
+                _strength = Strength::of(strength);
+                _v1 = src;
+                _v2 = dest;
+                _direction = NONE;
                 _scale = scale;
                 _offset = offset;
 

@@ -9,11 +9,12 @@
 #include "ScaleConstraint.cpp"
 #include "Plan.h"
 
+#include "StayConstraint.h"
+#include "EditConstraint.h"
+
 using namespace std;
 
 namespace deltablue {
-    class EditConstraint;
-    class StayConstraint;
 
     class Planner {
         private: 

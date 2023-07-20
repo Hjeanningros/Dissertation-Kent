@@ -17,7 +17,7 @@ namespace deltablue {
         }
     }
 
-    void incrementalRemove(shared_ptr<AbstractConstraint> c) {
+    void Planner::incrementalRemove(shared_ptr<AbstractConstraint> c) {
         shared_ptr<Variable> out = c->getOutput();
         c->markUnsatisfied();
         c->removeFromGraph();
@@ -124,7 +124,7 @@ namespace deltablue {
         }
     }
 
-    int newMark() {
+    int Planner::newMark() {
         return ++_currentMark;
     }
 
@@ -153,7 +153,7 @@ namespace deltablue {
         }
 
         sort(unsatisfied.begin(), unsatisfied.end(), [&](shared_ptr<AbstractConstraint> c1, shared_ptr<AbstractConstraint> c2) {
-            return c1->getStrength().stronger(c2->getStrength());
+            return c1->getStrength()->stronger(c2->getStrength());
         });
 
         return unsatisfied;
@@ -162,7 +162,7 @@ namespace deltablue {
     void Planner::chainTest(int n) {
         shared_ptr<Planner> planner;
         vector<shared_ptr<Variable>> vars(n + 1);
-        generate(vars.begin(), vars.end(), []() { return new Variable(); });
+        generate(vars.begin(), vars.end(), []() { return shared_ptr<Variable>(); });
 
         for (int i = 0; i < n; i++) {
             shared_ptr<Variable> v1 = vars[i];

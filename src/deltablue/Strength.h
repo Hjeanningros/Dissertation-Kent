@@ -1,7 +1,7 @@
 #ifndef STRENGTH
 #define STRENGTH
 
-#include <unordered_map>
+#include <map>
 #include <memory>
 
 using namespace std;
@@ -19,18 +19,16 @@ namespace deltablue {
                     int customHash() const;
             };
 
-            const shared_ptr<Sym> ABSOLUTE_STRONGEST = make_shared<Sym>(0);
-            const shared_ptr<Sym> REQUIRED           = make_shared<Sym>(1);
-            const shared_ptr<Sym> STRONG_PREFERRED   = make_shared<Sym>(2);
-            const shared_ptr<Sym> PREFERRED          = make_shared<Sym>(3);
-            const shared_ptr<Sym> STRONG_DEFAULT     = make_shared<Sym>(4);
-            const shared_ptr<Sym> DEFAULT            = make_shared<Sym>(5);
-            const shared_ptr<Sym> WEAK_DEFAULT       = make_shared<Sym>(6);
-            const shared_ptr<Sym> ABSOLUTE_WEAKEST   = make_shared<Sym>(7);
+            static shared_ptr<Sym> ABSOLUTE_STRONGEST;
+            static shared_ptr<Sym> REQUIRED;
+            static shared_ptr<Sym> STRONG_PREFERRED;
+            static shared_ptr<Sym> PREFERRED;
+            static shared_ptr<Sym> STRONG_DEFAULT;
+            static shared_ptr<Sym> DEFAULT;
+            static shared_ptr<Sym> WEAK_DEFAULT;
+            static shared_ptr<Sym> ABSOLUTE_WEAKEST;
 
         private:
-            static unordered_map<Sym, int> _strengthTable;
-            static unordered_map<Sym, shared_ptr<Strength>> _strengthConstant;
 
             int _arithmeticValue;
             shared_ptr<Sym> _symbolicValue;
@@ -38,9 +36,6 @@ namespace deltablue {
 
         public:
             Strength(shared_ptr<Sym> symbolicValue);
-
-            shared_ptr<Strength> _absoluteWeakest;
-            shared_ptr<Strength> _required;
 
             bool sameAs(shared_ptr<Strength> s) const;
             bool stronger(shared_ptr<Strength> s) const;
@@ -54,32 +49,16 @@ namespace deltablue {
 
         private:
 
-            std::unordered_map<shared_ptr<Sym>, int> strengthTable = {
-                {make_shared<Sym>(0), -10000},
-                {make_shared<Sym>(1), -800},
-                {make_shared<Sym>(2), -600},
-                {make_shared<Sym>(3), -400},
-                {make_shared<Sym>(4), -200},
-                {make_shared<Sym>(5), 0},
-                {make_shared<Sym>(6), 500},
-                {make_shared<Sym>(7), 10000}
-            };
+            static shared_ptr<Strength> _absoluteWeakest;
+            static shared_ptr<Strength> _required;
 
+            static map<shared_ptr<Sym>, int> _strengthTable;
+            static map<shared_ptr<Sym>, shared_ptr<Strength>> _strengthConstant;
 
-            std::unordered_map<shared_ptr<Sym>, shared_ptr<Strength>> strengthConstant = {
-                {make_shared<Sym>(0), make_shared<Strength>(make_shared<Sym>(0))},
-                {make_shared<Sym>(1), make_shared<Strength>(make_shared<Sym>(1))},
-                {make_shared<Sym>(2), make_shared<Strength>(make_shared<Sym>(2))},
-                {make_shared<Sym>(3), make_shared<Strength>(make_shared<Sym>(3))},
-                {make_shared<Sym>(4), make_shared<Strength>(make_shared<Sym>(4))},
-                {make_shared<Sym>(5), make_shared<Strength>(make_shared<Sym>(5))},
-                {make_shared<Sym>(6), make_shared<Strength>(make_shared<Sym>(6))},
-                {make_shared<Sym>(7), make_shared<Strength>(make_shared<Sym>(7))}
-            };
-
-            //static Strength absoluteWeakest = of(make_shared<Sym>(7));
-            //const static Strength required = of(make_shared<Sym>(1));
     };
+
+
+
 }
 
 #endif //STRENGTHPLAN
