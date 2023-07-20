@@ -18,7 +18,8 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/deltablue/Planner.cpp				\
 			src/deltablue/StayConstraint.cpp		\
 			src/deltablue/UnaryConstraint.cpp		\
-			src/deltablue/Variable.cpp
+			src/deltablue/Variable.cpp				\
+			src/DeltaBlue.cpp
 
 
 

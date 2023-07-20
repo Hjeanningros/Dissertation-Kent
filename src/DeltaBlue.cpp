@@ -1,6 +1,7 @@
 #include "Benchmark.cpp"
 #include "som/Error.cpp"
-#include "Planner.cpp"
+#include "deltablue/Planner.h"
+
 using namespace std;
 
 namespace deltablue {
@@ -19,5 +20,5 @@ namespace deltablue {
             bool verifyResult(any result) override {
                 throw Error("should never be reached");
             }
-    }
+    };
 }   

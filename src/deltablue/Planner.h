@@ -40,7 +40,7 @@ namespace deltablue {
             vector<shared_ptr<AbstractConstraint>> removePropagateFrom(shared_ptr<Variable> out);
 
             static void chainTest(int n);
-            void projectionTest(int n);
+            static void projectionTest(int n);
     };
 }
 

@@ -60,7 +60,7 @@ namespace deltablue {
         }
     };
 
-    extern map<shared_ptr<Strength::Sym>, int> Strength::_strengthTable = {
+    map<shared_ptr<Strength::Sym>, int> Strength::_strengthTable = {
         {make_shared<Sym>(0), -10000},
         {make_shared<Sym>(1), -800},
         {make_shared<Sym>(2), -600},
@@ -72,7 +72,7 @@ namespace deltablue {
     };
 
 
-    extern map<shared_ptr<Strength::Sym>, shared_ptr<Strength>> Strength::_strengthConstant = {
+    map<shared_ptr<Strength::Sym>, shared_ptr<Strength>> Strength::_strengthConstant = {
         {make_shared<Sym>(0), make_shared<Strength>(make_shared<Sym>(0))},
         {make_shared<Sym>(1), make_shared<Strength>(make_shared<Sym>(1))},
         {make_shared<Sym>(2), make_shared<Strength>(make_shared<Sym>(2))},
@@ -84,16 +84,16 @@ namespace deltablue {
     };
     
     // Set static member variable
-    extern shared_ptr<Strength::Sym> Strength::ABSOLUTE_STRONGEST = make_shared<Sym>(0);
-    extern shared_ptr<Strength::Sym> Strength::REQUIRED           = make_shared<Sym>(1);
-    extern shared_ptr<Strength::Sym> Strength::STRONG_PREFERRED   = make_shared<Sym>(2);
-    extern shared_ptr<Strength::Sym> Strength::PREFERRED          = make_shared<Sym>(3);
-    extern shared_ptr<Strength::Sym> Strength::STRONG_DEFAULT     = make_shared<Sym>(4);
-    extern shared_ptr<Strength::Sym> Strength::DEFAULT            = make_shared<Sym>(5);
-    extern shared_ptr<Strength::Sym> Strength::WEAK_DEFAULT       = make_shared<Sym>(6);
-    extern shared_ptr<Strength::Sym> Strength::ABSOLUTE_WEAKEST   = make_shared<Sym>(7);
+    shared_ptr<Strength::Sym> Strength::ABSOLUTE_STRONGEST = make_shared<Sym>(0);
+    shared_ptr<Strength::Sym> Strength::REQUIRED           = make_shared<Sym>(1);
+    shared_ptr<Strength::Sym> Strength::STRONG_PREFERRED   = make_shared<Sym>(2);
+    shared_ptr<Strength::Sym> Strength::PREFERRED          = make_shared<Sym>(3);
+    shared_ptr<Strength::Sym> Strength::STRONG_DEFAULT     = make_shared<Sym>(4);
+    shared_ptr<Strength::Sym> Strength::DEFAULT            = make_shared<Sym>(5);
+    shared_ptr<Strength::Sym> Strength::WEAK_DEFAULT       = make_shared<Sym>(6);
+    shared_ptr<Strength::Sym> Strength::ABSOLUTE_WEAKEST   = make_shared<Sym>(7);
 
-    extern shared_ptr<Strength> Strength::_absoluteWeakest = of(make_shared<Sym>(7));
-    extern shared_ptr<Strength> Strength::_required = of(make_shared<Sym>(1));
+    shared_ptr<Strength> Strength::_absoluteWeakest = of(make_shared<Sym>(7));
+    shared_ptr<Strength> Strength::_required = of(make_shared<Sym>(1));
 
 }
