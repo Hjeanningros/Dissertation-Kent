@@ -8,7 +8,15 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/Benchmark.cpp						\
 			src/Sieve.cpp							\
 			src/Permute.cpp							\
-			src/Queens.cpp							
+			src/Queens.cpp							\
+			src/Havlak.cpp							\
+			src/havlak/BasicBlock.cpp				\
+			src/havlak/BasicBlockEdge.cpp			\
+			src/havlak/ControlFlowGraph.cpp			\
+			src/havlak/HavlakLoopFinder.cpp			\
+			src/havlak/LoopTesterApp.cpp			\
+			src/havlak/SimpleLoop.cpp				\
+			src/havlak/UnionFindNode.cpp			
 
 
 
