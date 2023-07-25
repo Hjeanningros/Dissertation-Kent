@@ -12,6 +12,7 @@
 #include <iostream>
 #include <chrono>
 #include "Benchmark.cpp"
+#include "NBody.cpp"
 
 using namespace std;
 
@@ -39,6 +40,8 @@ class Run{
                 return make_shared<Queens>();
             if (name == "Towers")
                 return make_shared<Towers>();
+            if (name == "NBody")
+                return make_shared<nbody::NBody>();
                 
             
             throw Error("No benchmark found with the name: " + name);

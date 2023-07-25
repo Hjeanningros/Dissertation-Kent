@@ -11,7 +11,7 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/Queens.cpp							\
 			src/nbody/Body.cpp						\
 			src/nbody/NBodySystem.cpp				\
-			src/Nbody.cpp
+			src/NBody.cpp
 
 
 
