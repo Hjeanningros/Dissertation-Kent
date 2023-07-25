@@ -1,5 +1,5 @@
 #include <string>
-
+#include <iostream>
 using namespace std;
 
 namespace json {
@@ -8,14 +8,14 @@ namespace json {
             int _offset;
             int _line;
             int _column;
-            string _message;
+            string _what;
 
         public:
             ParseException(string message, int offset, int line, int column) {
                 _offset = offset;
                 _line   = line;
                 _column = column;
-                _message = message;
+                _what = message + " at " + to_string(line) + ":" + to_string(column);
             }
             
             int getOffset() {
@@ -31,8 +31,7 @@ namespace json {
             }
 
             const char *what() const throw() {
-                string full_message = _message + " at " + to_string(_line) + ":" + to_string(_column);
-                return (full_message.c_str());
+                return (_what.c_str());
             }
     };
 }

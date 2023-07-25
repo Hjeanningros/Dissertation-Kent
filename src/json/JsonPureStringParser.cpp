@@ -8,6 +8,8 @@
 #include "JsonNumber.cpp"
 #include "JsonString.cpp"
 
+#include <iostream>
+
 using namespace std;
 
 namespace json {
@@ -22,6 +24,7 @@ namespace json {
             int _captureStart;
 
             shared_ptr<JsonValue> readValue() {
+                cout << "current = " << _current << endl;
                 if (_current == "n") 
                     return readNull();
                 else if (_current == "t") 
@@ -32,8 +35,9 @@ namespace json {
                     return readString();
                 else if (_current == "[") 
                     return readArray();
-                else if (_current == "{") 
+                else if (_current == "{") {
                     return readObject();
+                }
                 else if (_current == "-" || _current == "0" || _current == "1" || _current == "2" || _current == "3" || _current == "4"
                     || _current == "5" || _current == "6" || _current == "7" || _current == "8" || _current == "9")
                     readNumber();
@@ -67,7 +71,7 @@ namespace json {
             }
 
             string readName() {
-                if (!(_current == "\"")) {
+                if (_current != "\"") {
                     throw expected("name");
                 }
                 return readStringInternal();
@@ -84,8 +88,8 @@ namespace json {
                     skipWhiteSpace();
                     array->add(readValue());
                     skipWhiteSpace();
-                } 
-                while (readChar(","));
+                }  while (readChar(","));
+
                 if (!readChar("]")) {
                         throw expected("',' or ']'");
                 }
@@ -130,7 +134,7 @@ namespace json {
             string readStringInternal() {
                 read();
                 startCapture();
-                while (!(_current == "\"")) {
+                while (_current != "\"") {
                     if (_current == "\\") {
                         pauseCapture();
                         readEscape();
@@ -170,10 +174,8 @@ namespace json {
                 if (!readDigit()) {
                     throw expected("digit");
                 }
-                if (!(firstDigit == "0")) {
-                    // Checkstyle: stop
+                if (firstDigit != "0") {
                     while (readDigit()) { }
-                    // Checkstyle: resume
                 }
                 readFraction();
                 readExponent();
@@ -187,9 +189,7 @@ namespace json {
                 if (!readDigit()) {
                     throw expected("digit");
                 }
-                // Checkstyle: stop
                 while (readDigit()) { }
-                // Checkstyle: resume
                 return true;
             }
 
@@ -204,14 +204,12 @@ namespace json {
                     throw expected("digit");
                 }
 
-                // Checkstyle: stop
                 while (readDigit()) { }
-                // Checkstyle: resume
                 return true;
             }
 
             bool readChar(string ch) {
-                if (!(_current == ch)) {
+                if (_current != ch) {
                     return false;
                 }
                 read();
@@ -239,7 +237,7 @@ namespace json {
                 }
                 _index++;
                 if (_index < _input.length()) {
-                    _current = _input.substr(_index, _index + 1);
+                    _current = _input.substr(_index, 1);
                 } else {
                     _current = "";
                 }
@@ -251,7 +249,7 @@ namespace json {
 
             void pauseCapture() {
                 int _end = _current == "" ? _index : _index - 1;
-                _captureBuffer += _input.substr(_captureStart, _end + 1);
+                _captureBuffer += _input.substr(_captureStart, _end - _captureStart + 1);
                 _captureStart = -1;
             }
 
@@ -259,9 +257,9 @@ namespace json {
                 int _end = _current == "" ? _index : _index - 1;
                 string captured;
                 if ("" == _captureBuffer) {
-                    captured = _input.substr(_captureStart, _end + 1);
+                    captured = _input.substr(_captureStart, _end - _captureStart + 1);
                 } else {
-                    _captureBuffer += _input.substr(_captureStart, _end + 1);
+                    _captureBuffer += _input.substr(_captureStart, _end - _captureStart + 1);
                     captured = _captureBuffer;
                     _captureBuffer = "";
                 }
@@ -273,7 +271,8 @@ namespace json {
                 if (isEndOfText()) {
                     return error("Unexpected end of input");
                 }
-                    return error("Expected " + expected);
+
+                return error("Expected " + expected);
             }
 
             ParseException error(string message) {
@@ -316,9 +315,13 @@ namespace json {
             
 
             shared_ptr<JsonValue> parse() {
+                cout << "HAHAHHAHA" << endl;
                 read();
+                cout << "HAHAHHAHA" << endl;
                 skipWhiteSpace();
+                cout << "HAHAHHAHA" << endl;
                 shared_ptr<JsonValue> result = readValue();
+                cout << "HAHAHHAHA" << endl;
                 skipWhiteSpace();
                 if (!isEndOfText()) {
                     throw Error("Unexpected character");

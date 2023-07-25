@@ -20,10 +20,10 @@ namespace json {
             JsonLiteral(string value);
 
             string toString() override;
-            bool isNullValue();
-            bool isTrueValue();
-            bool isFalseValue();
-            bool isBooleanValue();
+            bool isNull() override;
+            bool isTrue() override;
+            bool isFalse() override;
+            bool isBoolean() override;
 
     };
 }

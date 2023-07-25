@@ -9,9 +9,9 @@ namespace json {
 
     JsonLiteral::JsonLiteral(string value) {
         _value = value;
-        _isNull = value == "null";
-        _isTrue = value == "true";
-        _isFalse = value == "false";
+        _isNull = (value == "null");
+        _isTrue = (value == "true");
+        _isFalse = (value == "false");
     }
 
     // Method to get the string representation of the literal
@@ -20,22 +20,22 @@ namespace json {
     }
 
     // Check if the literal is null
-    bool JsonLiteral::isNullValue() {
+    bool JsonLiteral::isNull() {
         return _isNull;
     }
 
     // Check if the literal is true
-    bool JsonLiteral::isTrueValue() {
+    bool JsonLiteral::isTrue() {
         return _isTrue;
     }
 
     // Check if the literal is false
-    bool JsonLiteral::isFalseValue() {
+    bool JsonLiteral::isFalse() {
         return _isFalse;
     }
 
     // Check if the literal is a boolean value (true or false)
-    bool JsonLiteral::isBooleanValue() {
+    bool JsonLiteral::isBoolean() {
         return _isTrue || _isFalse;
     }
 

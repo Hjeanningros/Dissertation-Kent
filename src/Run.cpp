@@ -12,6 +12,7 @@
 #include <iostream>
 #include <chrono>
 #include "Benchmark.cpp"
+#include "Json.cpp"
 
 using namespace std;
 
@@ -39,6 +40,8 @@ class Run{
                 return make_shared<Queens>();
             if (name == "Towers")
                 return make_shared<Towers>();
+            if (name == "Json")
+                return make_shared<json::Json>();
                 
             
             throw Error("No benchmark found with the name: " + name);
