@@ -3,7 +3,7 @@
 
 #include <any>
 #include <memory>
-
+#include <iostream>
 using namespace std;
 
 
@@ -17,6 +17,7 @@ class Benchmark {
                 if (!verifyResult(benchmark())) {
                     return false;
                 }
+                cout << "work" << endl;
             }
             return true;
         }

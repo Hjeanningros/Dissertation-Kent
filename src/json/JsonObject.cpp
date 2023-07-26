@@ -4,6 +4,8 @@
 #include <memory>
 #include <map>
 #include "../som/Error.cpp"
+#include <iostream>
+
 using namespace std;
 
 namespace json {
@@ -16,6 +18,7 @@ namespace json {
             int indexOf(string name) {
                 int index = _table.find(name)->second;
                 if (index != -1 && name == _names[index]) {
+                    cout << "goodododod    " << _names[index] << endl;
                     return index;
                 }
                 throw new Error ("NotImplemented"); // Not needed for benchmark
@@ -24,23 +27,24 @@ namespace json {
         public:
             JsonObject() = default;
 
-            shared_ptr<JsonObject> add(string name, const shared_ptr<JsonValue> value) {
+            void add(string name, shared_ptr<JsonValue> value) {
                 if (name.empty()) {
                     throw Error ("name is null");
                 }
-                if (!value) {
+                if (value == nullptr) {
                     throw Error ("value is null");
                 }
                 _table[name] = _names.size();
                 _names.push_back(name);
                 _values.push_back(value);
-                return shared_ptr<JsonObject>(this);
             }
 
             shared_ptr<JsonValue> get(string name) {
+                cout << "Enter get" << endl;
                 if (name.empty()) {
                     throw Error ("name is null");
                 }
+                cout << name << endl;
                 int index = indexOf(name);
                 return index == -1 ? nullptr : _values[index];
             }
@@ -54,21 +58,9 @@ namespace json {
             }
 
             bool isObject() override {
+                cout << "hereh" << endl;
                 return true;
             }
-
-            shared_ptr<JsonValue> get(string name) const {
-                auto it = _table.find(name);
-                if (it != _table.end()) {
-                    int index = it->second;
-                    if (index >= 0 && index < static_cast<int>(_values.size())) {
-                        return _values[index];
-                    }
-                }
-                return nullptr;
-            }
-
-
 
             shared_ptr<JsonObject> asObject() override {
                 return shared_ptr<JsonObject>(this);

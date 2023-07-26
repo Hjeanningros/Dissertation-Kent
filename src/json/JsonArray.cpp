@@ -14,12 +14,11 @@ namespace json {
                 _values = vector<shared_ptr<JsonValue>>();
             }
 
-            shared_ptr<JsonArray> add(shared_ptr<JsonValue> value) {
+            void add(shared_ptr<JsonValue> value) {
                 if (value == nullptr) {
                     throw Error("value is null");
                 }
                 _values.push_back(value);
-                return shared_ptr<JsonArray>(this);
             }
 
             int size() {

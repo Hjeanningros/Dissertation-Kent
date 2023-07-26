@@ -24,23 +24,30 @@ namespace json {
             int _captureStart;
 
             shared_ptr<JsonValue> readValue() {
-                cout << "current = " << _current << endl;
-                if (_current == "n") 
+                cout << _current << endl;
+                if (_current == "n") {
+                    cout << "enter readNull" << endl;
                     return readNull();
-                else if (_current == "t") 
+                } else if (_current == "t") {
+                    cout << "enter readTrue" << endl;
                     return readTrue();
-                else if (_current == "f") 
+                } else if (_current == "f") {
+                    cout << "enter readFalse" << endl;
                     return readFalse();
-                else if (_current == "\"") 
+                } else if (_current == "\"") {
+                    cout << "enter readString" << endl;
                     return readString();
-                else if (_current == "[") 
+                } else if (_current == "[") {
+                    cout << "enter readArray" << endl;
                     return readArray();
-                else if (_current == "{") {
+                } else if (_current == "{") {
+                    cout << "enter readObject" << endl;
                     return readObject();
                 }
                 else if (_current == "-" || _current == "0" || _current == "1" || _current == "2" || _current == "3" || _current == "4"
-                    || _current == "5" || _current == "6" || _current == "7" || _current == "8" || _current == "9")
-                    readNumber();
+                    || _current == "5" || _current == "6" || _current == "7" || _current == "8" || _current == "9") {
+                    return readNumber();
+                }
                 else 
                     throw expected("value");
             }
@@ -60,6 +67,7 @@ namespace json {
                         throw expected("':'");
                     }
                     skipWhiteSpace();
+
                     object->add(name, readValue());
                     skipWhiteSpace();
                 } 
@@ -67,6 +75,7 @@ namespace json {
                 if (!readChar("}")) {
                     throw expected("',' or '}'");
                 }
+                cout << "end readObject" << endl;
                 return object;
             }
 
@@ -93,6 +102,7 @@ namespace json {
                 if (!readChar("]")) {
                         throw expected("',' or ']'");
                 }
+                cout << "end readArray" << endl;
                 return array;
             }
 
@@ -145,6 +155,7 @@ namespace json {
                 }
                 string string = endCapture();
                 read();
+                cout << "end readString" << endl;
                 return string;
             }
 
@@ -312,16 +323,10 @@ namespace json {
                 _captureBuffer = "";
             }
 
-            
-
             shared_ptr<JsonValue> parse() {
-                cout << "HAHAHHAHA" << endl;
                 read();
-                cout << "HAHAHHAHA" << endl;
                 skipWhiteSpace();
-                cout << "HAHAHHAHA" << endl;
                 shared_ptr<JsonValue> result = readValue();
-                cout << "HAHAHHAHA" << endl;
                 skipWhiteSpace();
                 if (!isEndOfText()) {
                     throw Error("Unexpected character");
