@@ -7,7 +7,8 @@ class Permute : public Benchmark
 {
     private:
         int _count;
-        vector<int> _v{vector<int>(5)};
+        //int _v[6];
+        int *_v;
 
 
         void swap(int i, int j) {
@@ -19,7 +20,9 @@ class Permute : public Benchmark
     public:
         any benchmark() override {
             _count = 0;
+            _v = new int[6];
             permute(6);
+            delete[] _v;
             return _count;
         }
 
