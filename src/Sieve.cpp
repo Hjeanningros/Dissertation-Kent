@@ -1,5 +1,6 @@
 #include <vector>
 #include "Benchmark.cpp"
+#include <algorithm>
 
 using namespace std;
 
@@ -8,11 +9,13 @@ class Sieve : public Benchmark
     public:
    
     any benchmark() override {
-        vector<bool> flags(5000, true);
-        return sieve(flags, 5000);
+        bool *flags = new bool[5000]; fill_n(flags, 5000, true);
+        int result = sieve(flags, 5000);
+        delete[] flags;
+        return result;
     }
 
-    static int sieve(vector<bool>& flags, int size) {
+    static int sieve(bool *flags, int size) {
         int primeCount = 0;
 
         for (int i = 2; i <= size; i++) {

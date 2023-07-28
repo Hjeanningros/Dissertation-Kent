@@ -1,26 +1,28 @@
 #include <vector>
 #include "Benchmark.cpp"
-#include <iostream>
+#include <algorithm>
 
 using namespace std;
 
 class Queens : public Benchmark
 {
     private:
-        vector<bool> _freeMaxs;
-        vector<bool> _freeRows;
-        vector<bool> _freeMins;
-        vector<int> _queenRows;
+        bool *_freeMaxs;
+        bool *_freeRows;
+        bool *_freeMins;
+        int *_queenRows;
 
         bool queens() {
-            _freeRows.assign(8, true);
-
-            //for (int i = 0; i < 8; i++)
-            //    cout << i << _freeMaxs[i] << endl;
-            _freeMaxs.assign(16, true);
-            _freeMins.assign(16, true);
-            _queenRows.assign(8, -1);
-            return placeQueen(0);
+            _freeRows = new bool[8];fill_n(_freeRows, 8, true);
+            _freeMaxs = new bool[16];fill_n(_freeMaxs, 16, true);
+            _freeMins = new bool[16];fill_n(_freeMins, 16, true);
+            _queenRows = new int[8];fill_n(_queenRows, 8, -1);
+            bool result = placeQueen(0);
+            delete[] _freeMaxs;
+            delete[] _freeRows;
+            delete[] _freeMins;
+            delete[] _queenRows;
+            return result;
         }
 
         bool placeQueen(int c) {

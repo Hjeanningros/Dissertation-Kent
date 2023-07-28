@@ -3,6 +3,7 @@
 #include <memory>
 #include "Benchmark.cpp"
 #include "som/Random.cpp"
+#include <algorithm>
 
 using namespace std;
 
@@ -19,6 +20,8 @@ class Bounce : public Benchmark
 
             public:
             
+            Ball() = default;
+
             Ball(shared_ptr<Random> random) {
                 _x = random->next() % 500;
                 _y = random->next() % 500;
@@ -64,19 +67,19 @@ class Bounce : public Benchmark
             shared_ptr<Random> random = make_shared<Random>();
             int ballCount = 100;
             int bounces = 0;
-            vector<Ball> balls;
-
-            for (int i = 0; i < 100; i++)
-                balls.push_back(Ball(random));
+            Ball *balls = new Ball[ballCount];
+            for(int i = 0; i < ballCount; i++) {
+                balls[i] = Ball(random);
+            }
 
             for (int i = 0; i < 50; i++) {
-                for (Ball& ball: balls) {
-                    if (ball.bounce()) {
+                for (int j = 0; j < ballCount; j++) {
+                    if (balls[j].bounce()) {
                         bounces += 1;
                     }
                 }
             }
-
+            delete[] balls;
             return bounces;
         }
         
