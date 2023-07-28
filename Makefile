@@ -12,6 +12,15 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/nbody/Body.cpp						\
 			src/nbody/NBodySystem.cpp				\
 			src/NBody.cpp
+			src/json/JsonArray.cpp					\
+			src/json/JsonLiteral.cpp				\
+			src/json/JsonNumber.cpp					\
+			src/json/JsonObject.cpp					\
+			src/json/JsonPureStringParser.cpp		\
+			src/json/JsonString.cpp					\
+			src/json/JsonValue.cpp					\
+			src/json/ParseException.cpp				\
+			src/Json.cpp									
 
 
 

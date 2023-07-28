@@ -13,6 +13,7 @@
 #include <chrono>
 #include "Benchmark.cpp"
 #include "NBody.cpp"
+#include "Json.cpp"
 
 using namespace std;
 
@@ -42,6 +43,8 @@ class Run{
                 return make_shared<Towers>();
             if (name == "NBody")
                 return make_shared<nbody::NBody>();
+            if (name == "Json")
+                return make_shared<json::Json>();
                 
             
             throw Error("No benchmark found with the name: " + name);
@@ -54,7 +57,6 @@ class Run{
             if(!bench->innerBenchmarkLoop(_innerIterations)) {
                 throw Error("Benchmark fail with incorrect result");
             }
-            
             auto endTime = chrono::high_resolution_clock::now();
             long runTime = chrono::duration_cast<chrono::nanoseconds>(endTime - startTime).count() / 1000;
 
