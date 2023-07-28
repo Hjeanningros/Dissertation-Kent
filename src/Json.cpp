@@ -19,17 +19,14 @@ namespace json {
             }
 
             bool verifyResult(any r) override {
-                cout << "verify result" << endl;
                 shared_ptr<JsonValue> result = any_cast<shared_ptr<JsonValue>>(r);
                 if (!result->isObject()) { 
                     return false; 
                 }
                 shared_ptr<JsonObject> resultObject = result->asObject();
-                cout << "get head  1" << endl;
                 if (!resultObject->get("head")->isObject()) { 
                     return false; 
                 }
-                cout << "get operation 1" << endl;
                 if (!resultObject->get("operations")->isArray()) {    
                     return false; 
                 }

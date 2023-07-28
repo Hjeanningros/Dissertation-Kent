@@ -8,8 +8,6 @@
 #include "JsonNumber.cpp"
 #include "JsonString.cpp"
 
-#include <iostream>
-
 using namespace std;
 
 namespace json {
@@ -24,24 +22,17 @@ namespace json {
             int _captureStart;
 
             shared_ptr<JsonValue> readValue() {
-                cout << _current << endl;
                 if (_current == "n") {
-                    cout << "enter readNull" << endl;
                     return readNull();
                 } else if (_current == "t") {
-                    cout << "enter readTrue" << endl;
                     return readTrue();
                 } else if (_current == "f") {
-                    cout << "enter readFalse" << endl;
                     return readFalse();
                 } else if (_current == "\"") {
-                    cout << "enter readString" << endl;
                     return readString();
                 } else if (_current == "[") {
-                    cout << "enter readArray" << endl;
                     return readArray();
                 } else if (_current == "{") {
-                    cout << "enter readObject" << endl;
                     return readObject();
                 }
                 else if (_current == "-" || _current == "0" || _current == "1" || _current == "2" || _current == "3" || _current == "4"
@@ -75,7 +66,6 @@ namespace json {
                 if (!readChar("}")) {
                     throw expected("',' or '}'");
                 }
-                cout << "end readObject" << endl;
                 return object;
             }
 
@@ -102,7 +92,6 @@ namespace json {
                 if (!readChar("]")) {
                         throw expected("',' or ']'");
                 }
-                cout << "end readArray" << endl;
                 return array;
             }
 
@@ -155,7 +144,6 @@ namespace json {
                 }
                 string string = endCapture();
                 read();
-                cout << "end readString" << endl;
                 return string;
             }
 

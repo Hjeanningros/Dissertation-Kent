@@ -17,7 +17,6 @@ class Benchmark {
                 if (!verifyResult(benchmark())) {
                     return false;
                 }
-                cout << "work" << endl;
             }
             return true;
         }

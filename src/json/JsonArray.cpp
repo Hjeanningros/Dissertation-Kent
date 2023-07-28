@@ -4,7 +4,7 @@
 #include "../som/Error.cpp"
 
 namespace json {
-    class JsonArray : public JsonValue {
+    class JsonArray : public JsonValue, public std::enable_shared_from_this<JsonArray> {
         private:
             vector<shared_ptr<JsonValue>> _values;
         
@@ -34,7 +34,7 @@ namespace json {
             }
 
             shared_ptr<JsonArray> asArray() override {
-                return shared_ptr<JsonArray>(this);
+                return shared_from_this();
             }
     };
 }
