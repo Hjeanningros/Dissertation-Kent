@@ -2,6 +2,7 @@
 #include "LoopStructureGraph.h"
 #include "HavlakLoopFinder.cpp"
 #include <memory>
+#include <iostream>
 
 using namespace std;
 
@@ -15,16 +16,22 @@ namespace havlak {
 
             int buildDiamond(int start) {
                 int bb0 = start;
-                BasicBlockEdge(_cfg, bb0, bb0 + 1);
-                BasicBlockEdge(_cfg, bb0, bb0 + 2);
-                BasicBlockEdge(_cfg, bb0 + 1, bb0 + 3);
-                BasicBlockEdge(_cfg, bb0 + 2, bb0 + 3);
+                shared_ptr<BasicBlockEdge> edge;
+                edge = make_shared<BasicBlockEdge>(_cfg, bb0, bb0 + 1);
+                _cfg->addEdge(edge);
+                edge = make_shared<BasicBlockEdge>(_cfg, bb0, bb0 + 2);
+                _cfg->addEdge(edge);
+                edge = make_shared<BasicBlockEdge>(_cfg, bb0 + 1, bb0 + 3);
+                _cfg->addEdge(edge);
+                edge = make_shared<BasicBlockEdge>(_cfg, bb0 + 2, bb0 + 3);
+                _cfg->addEdge(edge);
 
                 return bb0 + 3;
             }
 
             void buildConnect(int start, int end) {
-                BasicBlockEdge(_cfg, start, end);
+                shared_ptr<BasicBlockEdge> edge = make_shared<BasicBlockEdge>(_cfg, start, end);
+                _cfg->addEdge(edge);
             }
 
             int buildStraight(int start, int n) {
@@ -34,7 +41,7 @@ namespace havlak {
                 return start + n;
             }
 
-            int buildBaseLoop(int from) {
+          int buildBaseLoop(int from) {
                 int header = buildStraight(from, 1);
                 int diamond1 = buildDiamond(header);
                 int d11 = buildStraight(diamond1, 1);
@@ -42,7 +49,6 @@ namespace havlak {
                 int footer = buildStraight(diamond2, 1);
                 buildConnect(diamond2, d11);
                 buildConnect(diamond1, header);
-
                 buildConnect(footer, from);
                 footer = buildStraight(footer, 1);
                 return footer;
@@ -52,21 +58,29 @@ namespace havlak {
                 _cfg->createNode(0);
                 buildBaseLoop(0);
                 _cfg->createNode(1);
-                BasicBlockEdge(_cfg, 0, 2);
+                shared_ptr<BasicBlockEdge> edge = make_shared<BasicBlockEdge>(_cfg, 0, 2);
+                _cfg->addEdge(edge);
             }
 
         public:
-            LoopTesterApp() : _cfg(), _lsg() {
+            LoopTesterApp() {
+                _cfg = make_shared<ControlFlowGraph>();
+                _lsg = make_shared<LoopStructureGraph>();
                 _cfg->createNode(0);
+
             }
 
             vector<int> main(int numDummyLoops, int findLoopIterations, int parLoops,
                     int pparLoops, int ppparLoops) {
+                cout << "hahah" << endl;
                 constructSimpleCFG();
+                cout << "hahah" << endl;
                 addDummyLoops(numDummyLoops);
+                cout << "hahah" << endl;
                 constructCFG(parLoops, pparLoops, ppparLoops);
-
+                cout << "hahah" << endl;
                 findLoops(_lsg);
+                cout << "hahah" << endl;
                 for (int i = 0; i < findLoopIterations; i++) {
                     findLoops(make_shared<LoopStructureGraph>());
                 }
@@ -105,8 +119,8 @@ namespace havlak {
             }
 
             void findLoops(shared_ptr<LoopStructureGraph> loopStructure) {
-                HavlakLoopFinder finder(_cfg, loopStructure);
-                finder.findLoops();
+                shared_ptr<HavlakLoopFinder> finder = make_shared<HavlakLoopFinder>(_cfg, loopStructure);
+                finder->findLoops();
             }
         
     };

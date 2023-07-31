@@ -3,6 +3,7 @@
 #include "UnionFindNode.cpp"
 #include <map>
 #include <algorithm>
+#include <iostream>
 
 using namespace std;
 
@@ -45,27 +46,31 @@ namespace havlak {
             }
 
             int doDFS(shared_ptr<BasicBlock> currentNode, int current) {
+                cout << "doDFS" << endl;
                 _nodes[current]->initNode(currentNode, current);
                 _number.insert(make_pair(currentNode, current));
-
+                cout << "1" << endl;
                 int lastId = current;
                 vector<shared_ptr<BasicBlock>> outerBlocks = currentNode->getOutEdges();
-
+                cout << "outerBlocks.size() = " << outerBlocks.size() << endl;
                 for (int i = 0; i < outerBlocks.size(); i++) {
-                    shared_ptr<BasicBlock> target = outerBlocks.at(i);
-                    if (_number.at(target) == UNVISITED) {
+                    shared_ptr<BasicBlock> target = outerBlocks[i];
+                    if (_number[target] == UNVISITED) {
+                        cout << "in IF target = " << target << "lastId + 1 == " << (lastId + 1) << endl;
                         lastId = doDFS(target, lastId + 1);
                     }
                 }
 
                 _last[current] = lastId;
+                cout << "end of doDFS" << endl;
                 return lastId;
             }
 
             void initAllNodes() {
+                cout << "initAllNodes size = " <<  _cfg->getBasicBlocks().size() << endl;
+
                 for (shared_ptr<BasicBlock> bb: _cfg->getBasicBlocks())
                     _number.insert(make_pair(bb, UNVISITED));
-
 
                 doDFS(_cfg->getStartBasicBlock(), 0);
             }
@@ -154,12 +159,15 @@ namespace havlak {
             }
 
             void findLoops() {
+                cout << "FindLoop" << endl;
                 if (_cfg->getStartBasicBlock() == nullptr) {
                     return;
                 }
+                cout << "Step1" << endl;
 
                 int size = _cfg->getNumNodes();
 
+                cout << "Step2" << endl;
                 _nonBackPreds.clear();
                 _backPreds.clear();
                 _number.clear();
@@ -170,13 +178,17 @@ namespace havlak {
                     _nodes = vector<shared_ptr<UnionFindNode>>(size);
                     _maxSize = size;
                 }
+                cout << "Step3" << endl;
 
                 for (int i = 0; i < size; ++i) {
-                    _nodes[i] = shared_ptr<UnionFindNode>();
+                    _nodes[i] = make_shared<UnionFindNode>();
                 }
+                cout << "Step4" << endl;
 
                 initAllNodes();
+                cout << "Step5" << endl;
                 identifyEdges(size);
+                cout << "Step6" << endl;
 
                 // Start node is root of all other loops.
                 _header[0] = 0;

@@ -7,7 +7,7 @@
 using namespace std;
 
 namespace havlak {
-    class SimpleLoop {
+    class SimpleLoop : public enable_shared_from_this<SimpleLoop> {
         private:
             set<shared_ptr<BasicBlock>> _basicBlocks;
             set<shared_ptr<SimpleLoop>> _children;

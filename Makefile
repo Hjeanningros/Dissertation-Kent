@@ -16,6 +16,7 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/havlak/HavlakLoopFinder.cpp			\
 			src/havlak/LoopTesterApp.cpp			\
 			src/havlak/SimpleLoop.cpp				\
+			src/havlak/LoopStructureGraph.cpp			\
 			src/havlak/UnionFindNode.cpp			
 
 

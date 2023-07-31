@@ -1,11 +1,11 @@
 #include <vector>
 #include "SimpleLoop.h"
 #include <memory>
-
+#include <iostream>
 using namespace std;
 
 namespace havlak {
-    class UnionFindNode {
+    class UnionFindNode : public enable_shared_from_this<UnionFindNode> {
         private:
             shared_ptr<UnionFindNode> _parent;
             shared_ptr<BasicBlock> _bb;
@@ -13,16 +13,12 @@ namespace havlak {
             int _dfsNumber;
 
             public:
-                UnionFindNode() {
-                    _parent = shared_ptr<UnionFindNode>(this);
-                    _bb = nullptr;
-                    _loop = nullptr;
-                    _dfsNumber = 0;
-                } 
+                UnionFindNode() { } 
 
                 // Initialize this node.
                 void initNode(shared_ptr<BasicBlock> bb, int dfsNumber) {
-                    _parent = shared_ptr<UnionFindNode>(this);
+                    cout << "initNode" << endl;
+                    _parent = shared_from_this();
                     _bb = bb;
                     _dfsNumber = dfsNumber;
                     _loop = nullptr;
@@ -32,7 +28,7 @@ namespace havlak {
                 shared_ptr<UnionFindNode> findSet() {
                     vector<shared_ptr<UnionFindNode>> nodeList;
 
-                    shared_ptr<UnionFindNode> node = shared_ptr<UnionFindNode>(this);
+                    shared_ptr<UnionFindNode> node = shared_from_this();
                     while (node != node->_parent) {
                         if (node->_parent != node->_parent->_parent) {
                             nodeList.push_back(node);

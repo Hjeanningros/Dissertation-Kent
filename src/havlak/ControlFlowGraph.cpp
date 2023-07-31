@@ -1,19 +1,20 @@
 #include "ControlFlowGraph.h"
 
+#include <iostream>
+
 namespace havlak {
 
     ControlFlowGraph::ControlFlowGraph() {
-        _startNode = nullptr;
     }
 
     shared_ptr<BasicBlock> ControlFlowGraph::createNode(int name) {
-        shared_ptr<BasicBlock> node = nullptr;
+        shared_ptr<BasicBlock> node;
         if (name < _basicBlockMap.size() && _basicBlockMap[name] != nullptr) {
             node = _basicBlockMap[name];
         } else {
             node = make_shared<BasicBlock>(name);
             if (name >= _basicBlockMap.size()) {
-                _basicBlockMap.resize(name + 1, nullptr);
+                _basicBlockMap.resize(name + 1);
             }
             _basicBlockMap[name] = node;
         }
@@ -39,6 +40,5 @@ namespace havlak {
     vector<shared_ptr<BasicBlock>> ControlFlowGraph::getBasicBlocks() {
         return _basicBlockMap;
     }
-
 
 }

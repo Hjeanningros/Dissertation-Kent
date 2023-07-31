@@ -42,7 +42,7 @@ namespace havlak {
     void SimpleLoop::setParent(shared_ptr<SimpleLoop> parent) {
         _parent = parent;
         if (parent != nullptr) {
-            parent->addChildLoop(shared_ptr<SimpleLoop>(this));
+            parent->addChildLoop(shared_from_this());
         }
     }
 

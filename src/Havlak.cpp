@@ -9,8 +9,9 @@ namespace havlak {
     class Havlak : public Benchmark {
         public:
             bool innerBenchmarkLoop(int innerIterations) override {
-                return verifyResult((shared_ptr<LoopTesterApp>())->main(
+                bool result = verifyResult((make_shared<LoopTesterApp>())->main(
                     innerIterations, 50, 10 /* was 100 */, 10, 5), innerIterations);
+                return result;
             } 
 
             bool verifyResult(any result, int innerIterations) {

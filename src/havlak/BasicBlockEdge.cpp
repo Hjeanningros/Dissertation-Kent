@@ -11,8 +11,6 @@ namespace havlak {
 
         _from->addOutEdge(_to);
         _to->addInEdge(_from);
-
-        cfg->addEdge(shared_ptr<BasicBlockEdge>(this));
     }
 
 }

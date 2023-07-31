@@ -1,7 +1,6 @@
 #ifndef BASICBLOCKEDGE
 #define BASICBLOCKEDGE
 
-
 #include "BasicBlock.h"
 
 using namespace std;
@@ -9,7 +8,7 @@ using namespace std;
 namespace havlak {
     class ControlFlowGraph;
 
-    class BasicBlockEdge {
+    class BasicBlockEdge : public enable_shared_from_this<BasicBlockEdge> {
         private:
             shared_ptr<BasicBlock> _from;
             shared_ptr<BasicBlock> _to;
