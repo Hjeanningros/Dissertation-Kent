@@ -27,14 +27,15 @@ namespace havlak {
             static constexpr int UNVISITED = numeric_limits<int>::max();
             static constexpr int MAXNONBACKPREDS = 32 * 1024;
 
-            vector<set<int>> _nonBackPreds;
-            vector<vector<int>> _backPreds;
+            shared_ptr<Vector<set<int>>> _nonBackPreds = make_shared<Vector<set<int>>>() ;
+            shared_ptr<Vector<Vector<int>>> _backPreds = make_shared<Vector<Vector<int>>>();
             map<shared_ptr<BasicBlock>, int> _number;
+            
             int _maxSize = 0;
-            vector<int> _header;
-            vector<BasicBlockClass> _type;
-            vector<int> _last;
-            vector<shared_ptr<UnionFindNode>> _nodes;
+            int* _header;
+            BasicBlockClass* _type;
+            int* _last;
+            shared_ptr<UnionFindNode>* _nodes;
 
             bool findElement(const std::vector<shared_ptr<UnionFindNode>> nodePool, shared_ptr<UnionFindNode> ydash) {
                 return std::find_if(nodePool.begin(), nodePool.end(),
@@ -51,10 +52,10 @@ namespace havlak {
                 _number.insert(make_pair(currentNode, current));
                 cout << "1" << endl;
                 int lastId = current;
-                vector<shared_ptr<BasicBlock>> outerBlocks = currentNode->getOutEdges();
-                cout << "outerBlocks.size() = " << outerBlocks.size() << endl;
-                for (int i = 0; i < outerBlocks.size(); i++) {
-                    shared_ptr<BasicBlock> target = outerBlocks[i];
+                shared_ptr<Vector<shared_ptr<BasicBlock>>> outerBlocks = currentNode->getOutEdges();
+                cout << "outerBlocks.size() = " << outerBlocks->size() << endl;
+                for (int i = 0; i < outerBlocks->size(); i++) {
+                    shared_ptr<BasicBlock> target = outerBlocks->at(i);
                     if (_number[target] == UNVISITED) {
                         cout << "in IF target = " << target << "lastId + 1 == " << (lastId + 1) << endl;
                         lastId = doDFS(target, lastId + 1);
@@ -67,11 +68,13 @@ namespace havlak {
             }
 
             void initAllNodes() {
-                cout << "initAllNodes size = " <<  _cfg->getBasicBlocks().size() << endl;
+                cout << "initAllNodes size = " <<  _cfg->getBasicBlocks()->size() << endl;
 
-                for (shared_ptr<BasicBlock> bb: _cfg->getBasicBlocks())
+                _cfg->getBasicBlocks()->forEach([&](shared_ptr<BasicBlock> bb) -> void {
+                    cout << bb->customHash() << endl;
                     _number.insert(make_pair(bb, UNVISITED));
-
+                });
+                cout << "end forEach" << endl;
                 doDFS(_cfg->getStartBasicBlock(), 0);
             }
 
@@ -91,27 +94,27 @@ namespace havlak {
 
             void processEdges(shared_ptr<BasicBlock> nodeW, int w) {
                 if (nodeW->getNumPred() > 0) {
-                    for (shared_ptr<BasicBlock> nodeV : nodeW->getInEdges()) {
+                    nodeW->getInEdges()->forEach([&](shared_ptr<BasicBlock> nodeV) -> void {
                         int v = _number[nodeV];
                         if (v != UNVISITED) {
                             if (isAncestor(w, v)) {
-                                _backPreds[w].push_back(v);
+                                _backPreds->at(w).append(v);
                             } else {
-                                _nonBackPreds[w].insert(v);
+                                _nonBackPreds->at(w).insert(v);
                             }
                         }
-                    }
+                    });
                 }
             }
 
             void stepEProcessNonBackPreds(int w, vector<shared_ptr<UnionFindNode>> nodePool, vector<shared_ptr<UnionFindNode>> workList, shared_ptr<UnionFindNode> x) {
-                for (int iter : _nonBackPreds[x->getDfsNumber()]) {
+                for (int iter : _nonBackPreds->at(x->getDfsNumber())) {
                   shared_ptr<UnionFindNode> y = _nodes[iter];
                   shared_ptr<UnionFindNode> ydash = y->findSet();
 
                   if (!isAncestor(w, ydash->getDfsNumber())) {
                       _type[w] = BB_IRREDUCIBLE;
-                      _nonBackPreds[w].insert(ydash->getDfsNumber());
+                      _nonBackPreds->at(w).insert(ydash->getDfsNumber());
                   } else {
                       if (ydash->getDfsNumber() != w) {
                           if (!findElement(nodePool, ydash)) {
@@ -141,13 +144,13 @@ namespace havlak {
             }
 
             void stepD(int w, vector<shared_ptr<UnionFindNode>> nodePool) {
-                for (int v : _backPreds[w]) {
+                _backPreds->at(w).forEach([&](int v) -> void {
                     if (v != w) {
                         nodePool.push_back(_nodes[v]->findSet());
                     } else {
                         _type[w] = BB_SELF;
                     }   
-                }
+                });
             }
 
 
@@ -168,14 +171,14 @@ namespace havlak {
                 int size = _cfg->getNumNodes();
 
                 cout << "Step2" << endl;
-                _nonBackPreds.clear();
-                _backPreds.clear();
+                _nonBackPreds->removeAll();
+                _backPreds->removeAll();
                 _number.clear();
                 if (size > _maxSize) {
-                    _header = vector<int>(size);
-                    _type = vector<BasicBlockClass>(size);
-                    _last = vector<int>(size);
-                    _nodes = vector<shared_ptr<UnionFindNode>>(size);
+                    _header = new int[size];
+                    _type = new BasicBlockClass[size];
+                    _last = new int[size];
+                    _nodes = new shared_ptr<UnionFindNode>[size];
                     _maxSize = size;
                 }
                 cout << "Step3" << endl;
@@ -218,7 +221,7 @@ namespace havlak {
                         shared_ptr<UnionFindNode> x = workList.front();
                         workList.erase(workList.begin());
 
-                        int nonBackSize = _nonBackPreds[x->getDfsNumber()].size();
+                        int nonBackSize = _nonBackPreds->at(x->getDfsNumber()).size();
                         if (nonBackSize > MAXNONBACKPREDS) {
                             return;
                           }

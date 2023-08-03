@@ -1,5 +1,6 @@
 SRC_CORE=	src/som/Error.cpp						\
 			src/som/Random.cpp						\
+			src/som/Vector.cpp						\
 			src/Bounce.cpp							\
 			src/Run.cpp 							\
 			src/Harness.cpp							\
@@ -16,7 +17,7 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/havlak/HavlakLoopFinder.cpp			\
 			src/havlak/LoopTesterApp.cpp			\
 			src/havlak/SimpleLoop.cpp				\
-			src/havlak/LoopStructureGraph.cpp			\
+			src/havlak/LoopStructureGraph.cpp		\
 			src/havlak/UnionFindNode.cpp			
 
 
@@ -31,7 +32,7 @@ NAME_CORE   =	Harness
 
 
 $(NAME_CORE):	$(OBJ_CORE)
-	g++ -o $(NAME_CORE) $(OBJ_CORE) $(CXXFLAGS) -ldl
+	g++ -o $(NAME_CORE) $(OBJ_CORE) $(CXXFLAGS) -ldl 
 
 all:    $(NAME_CORE) 
 

@@ -5,18 +5,18 @@
 namespace havlak {
 
     ControlFlowGraph::ControlFlowGraph() {
+        _startNode = nullptr;
+        _basicBlockMap = make_shared<Vector<shared_ptr<BasicBlock>>>();
+        _edgeList = make_shared<Vector<shared_ptr<BasicBlockEdge>>>();
     }
 
     shared_ptr<BasicBlock> ControlFlowGraph::createNode(int name) {
         shared_ptr<BasicBlock> node;
-        if (name < _basicBlockMap.size() && _basicBlockMap[name] != nullptr) {
-            node = _basicBlockMap[name];
+        if (_basicBlockMap != nullptr && _basicBlockMap->atPtr(name) != nullptr) {
+            node = _basicBlockMap->atPtr(name);
         } else {
             node = make_shared<BasicBlock>(name);
-            if (name >= _basicBlockMap.size()) {
-                _basicBlockMap.resize(name + 1);
-            }
-            _basicBlockMap[name] = node;
+            _basicBlockMap->atPut(name, node);
         }
 
         if (getNumNodes() == 1) {
@@ -26,18 +26,18 @@ namespace havlak {
     }
 
     void ControlFlowGraph::addEdge(shared_ptr<BasicBlockEdge> edge) {
-        _edgeList.push_back(edge);
+        _edgeList->append(edge);
     }
 
     int ControlFlowGraph::getNumNodes() {
-        return _basicBlockMap.size();
+        return _basicBlockMap->size();
     }
 
     shared_ptr<BasicBlock> ControlFlowGraph::getStartBasicBlock() {
         return _startNode;
     }
 
-    vector<shared_ptr<BasicBlock>> ControlFlowGraph::getBasicBlocks() {
+    shared_ptr<Vector<shared_ptr<BasicBlock>>> ControlFlowGraph::getBasicBlocks() {
         return _basicBlockMap;
     }
 

@@ -4,16 +4,16 @@
 #include <vector>
 #include "BasicBlock.h"
 #include "BasicBlockEdge.h"
-
+#include "../som/Vector.cpp"
 using namespace std;
 
 namespace havlak {
     
     class ControlFlowGraph {
         private:
-            vector<shared_ptr<BasicBlock>> _basicBlockMap;
+            shared_ptr<Vector<shared_ptr<BasicBlock>>> _basicBlockMap;
             shared_ptr<BasicBlock> _startNode;
-            vector<shared_ptr<BasicBlockEdge>> _edgeList;
+            shared_ptr<Vector<shared_ptr<BasicBlockEdge>>> _edgeList;
         
         public:
             ControlFlowGraph();
@@ -21,7 +21,7 @@ namespace havlak {
             void addEdge(shared_ptr<BasicBlockEdge> edge);
             int getNumNodes();
             shared_ptr<BasicBlock> getStartBasicBlock();
-            vector<shared_ptr<BasicBlock>> getBasicBlocks();
+            shared_ptr<Vector<shared_ptr<BasicBlock>>> getBasicBlocks();
 
     };
 }

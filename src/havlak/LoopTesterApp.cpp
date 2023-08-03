@@ -16,26 +16,21 @@ namespace havlak {
 
             int buildDiamond(int start) {
                 int bb0 = start;
-                shared_ptr<BasicBlockEdge> edge;
-                edge = make_shared<BasicBlockEdge>(_cfg, bb0, bb0 + 1);
-                _cfg->addEdge(edge);
-                edge = make_shared<BasicBlockEdge>(_cfg, bb0, bb0 + 2);
-                _cfg->addEdge(edge);
-                edge = make_shared<BasicBlockEdge>(_cfg, bb0 + 1, bb0 + 3);
-                _cfg->addEdge(edge);
-                edge = make_shared<BasicBlockEdge>(_cfg, bb0 + 2, bb0 + 3);
-                _cfg->addEdge(edge);
+                _cfg->addEdge(make_shared<BasicBlockEdge>(_cfg, bb0, bb0 + 1));
+                _cfg->addEdge(make_shared<BasicBlockEdge>(_cfg, bb0, bb0 + 2));
+                _cfg->addEdge(make_shared<BasicBlockEdge>(_cfg, bb0 + 1, bb0 + 3));
+                _cfg->addEdge(make_shared<BasicBlockEdge>(_cfg, bb0 + 2, bb0 + 3));
 
                 return bb0 + 3;
             }
 
             void buildConnect(int start, int end) {
-                shared_ptr<BasicBlockEdge> edge = make_shared<BasicBlockEdge>(_cfg, start, end);
-                _cfg->addEdge(edge);
+                _cfg->addEdge(make_shared<BasicBlockEdge>(_cfg, start, end));
             }
 
             int buildStraight(int start, int n) {
                 for (int i = 0; i < n; i++) {
+                    cout << start + i << " start   and    " <<  start + i + 1 << " end" << endl;
                     buildConnect(start + i, start + i + 1);
                 }
                 return start + n;
@@ -58,8 +53,8 @@ namespace havlak {
                 _cfg->createNode(0);
                 buildBaseLoop(0);
                 _cfg->createNode(1);
-                shared_ptr<BasicBlockEdge> edge = make_shared<BasicBlockEdge>(_cfg, 0, 2);
-                _cfg->addEdge(edge);
+
+                _cfg->addEdge(make_shared<BasicBlockEdge>(_cfg, 0, 2));
             }
 
         public:
