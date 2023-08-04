@@ -26,20 +26,21 @@ namespace havlak {
 
                 // Union/Find Algorithm - The find routine.
                 shared_ptr<UnionFindNode> findSet() {
-                    vector<shared_ptr<UnionFindNode>> nodeList;
+                    Vector<shared_ptr<UnionFindNode>> nodeList = Vector<shared_ptr<UnionFindNode>>();
 
                     shared_ptr<UnionFindNode> node = shared_from_this();
                     while (node != node->_parent) {
                         if (node->_parent != node->_parent->_parent) {
-                            nodeList.push_back(node);
+                            nodeList.append(node);
                         }
                         node = node->_parent;
                     }
 
                     // Path Compression, all nodes' parents point to the 1st level parent.
-                    for (shared_ptr<UnionFindNode> iter : nodeList) {
+                    nodeList.forEach([&](shared_ptr<UnionFindNode> iter) -> void {
                         iter->unionSet(_parent);
-                    }
+                    });
+
                     return node;
                 }
 

@@ -37,11 +37,6 @@ namespace havlak {
             int* _last;
             shared_ptr<UnionFindNode>* _nodes;
 
-            bool findElement(const std::vector<shared_ptr<UnionFindNode>> nodePool, shared_ptr<UnionFindNode> ydash) {
-                return std::find_if(nodePool.begin(), nodePool.end(),
-                        [ydash](shared_ptr<UnionFindNode> e) { return e == ydash; }) != nodePool.end();
-            }
-
             bool isAncestor(int w, int v) {
                 return w <= v && v <= _last[w];
             }
@@ -107,30 +102,32 @@ namespace havlak {
                 }
             }
 
-            void stepEProcessNonBackPreds(int w, vector<shared_ptr<UnionFindNode>> nodePool, vector<shared_ptr<UnionFindNode>> workList, shared_ptr<UnionFindNode> x) {
+            void stepEProcessNonBackPreds(int w, shared_ptr<Vector<shared_ptr<UnionFindNode>>> nodePool, shared_ptr<Vector<shared_ptr<UnionFindNode>>> workList, shared_ptr<UnionFindNode> x) {
                 for (int iter : _nonBackPreds->at(x->getDfsNumber())) {
-                  shared_ptr<UnionFindNode> y = _nodes[iter];
-                  shared_ptr<UnionFindNode> ydash = y->findSet();
+                    shared_ptr<UnionFindNode> y = _nodes[iter];
+                    shared_ptr<UnionFindNode> ydash = y->findSet();
 
-                  if (!isAncestor(w, ydash->getDfsNumber())) {
-                      _type[w] = BB_IRREDUCIBLE;
-                      _nonBackPreds->at(w).insert(ydash->getDfsNumber());
-                  } else {
-                      if (ydash->getDfsNumber() != w) {
-                          if (!findElement(nodePool, ydash)) {
-                              workList.push_back(ydash);
-                              nodePool.push_back(ydash);
-                          }
-                      }
-                  }
+                    if (!isAncestor(w, ydash->getDfsNumber())) {
+                        _type[w] = BB_IRREDUCIBLE;
+                        _nonBackPreds->at(w).insert(ydash->getDfsNumber());
+                    } else {
+                        if (ydash->getDfsNumber() != w) {
+                            if (!nodePool->hasSome([&](shared_ptr<UnionFindNode> e) -> bool {
+                                return e == ydash;
+                            })) {
+                                workList->append(ydash);
+                                nodePool->append(ydash);
+                            }
+                        }
+                    }
                 }
             }
 
 
-            void setLoopAttributes(int w, vector<shared_ptr<UnionFindNode>> nodePool, shared_ptr<SimpleLoop> loop) {
+            void setLoopAttributes(int w, shared_ptr<Vector<shared_ptr<UnionFindNode>>> nodePool, shared_ptr<SimpleLoop> loop) {
                 _nodes[w]->setLoop(loop);
 
-                for (shared_ptr<UnionFindNode> node: nodePool) {
+                nodePool->forEach([&](shared_ptr<UnionFindNode> node) -> void {
                     _header[node->getDfsNumber()] = w;
                     node->unionSet(_nodes[w]);
 
@@ -140,13 +137,13 @@ namespace havlak {
                     } else {
                         loop->addNode(node->getBb());
                     }
-                }
+                });
             }
 
-            void stepD(int w, vector<shared_ptr<UnionFindNode>> nodePool) {
+            void stepD(int w, shared_ptr<Vector<shared_ptr<UnionFindNode>>> nodePool) {
                 _backPreds->at(w).forEach([&](int v) -> void {
                     if (v != w) {
-                        nodePool.push_back(_nodes[v]->findSet());
+                        nodePool->append(_nodes[v]->findSet());
                     } else {
                         _type[w] = BB_SELF;
                     }   
@@ -198,7 +195,7 @@ namespace havlak {
 
                 for (int w = size - 1; w >= 0; w--) {
                     // this is 'P' in Havlak's paper
-                    vector<shared_ptr<UnionFindNode>> nodePool = vector<shared_ptr<UnionFindNode>>();
+                    shared_ptr<Vector<shared_ptr<UnionFindNode>>> nodePool = make_shared<Vector<shared_ptr<UnionFindNode>>>();
 
                     shared_ptr<BasicBlock> nodeW = _nodes[w]->getBb();
                     if (nodeW != nullptr) {
@@ -206,32 +203,31 @@ namespace havlak {
 
                     // Copy nodePool to workList.
                     //
-                    vector<shared_ptr<UnionFindNode>> workList = vector<shared_ptr<UnionFindNode>>();
-                    for (shared_ptr<UnionFindNode> niter: nodePool) {
-                        workList.push_back(niter);
-                    }
+                    shared_ptr<Vector<shared_ptr<UnionFindNode>>> workList = make_shared<Vector<shared_ptr<UnionFindNode>>>();
+                    nodePool->forEach([&](shared_ptr<UnionFindNode> niter) -> void {
+                        workList->append(niter);
+                    });
 
-                    if (nodePool.size() != 0) {
-                      _type[w] = BB_REDUCIBLE;
+                    if (nodePool->size() != 0) {
+                        _type[w] = BB_REDUCIBLE;
                     }
 
                     // work the list...
                     //
-                    while (!workList.empty()) {
-                        shared_ptr<UnionFindNode> x = workList.front();
-                        workList.erase(workList.begin());
+                    while (!workList->isEmpty()) {
+                        shared_ptr<UnionFindNode> x = workList->removeFirst();
 
                         int nonBackSize = _nonBackPreds->at(x->getDfsNumber()).size();
                         if (nonBackSize > MAXNONBACKPREDS) {
                             return;
-                          }
+                        }
                         stepEProcessNonBackPreds(w, nodePool, workList, x);
                     }
 
 
-                    if ((nodePool.size() > 0) || (_type[w] == BB_SELF)) {
-                      shared_ptr<SimpleLoop> loop = _lsg->createNewLoop(nodeW, _type[w] != BB_IRREDUCIBLE);
-                      setLoopAttributes(w, nodePool, loop);
+                    if ((nodePool->size() > 0) || (_type[w] == BB_SELF)) {
+                        shared_ptr<SimpleLoop> loop = _lsg->createNewLoop(nodeW, _type[w] != BB_IRREDUCIBLE);
+                        setLoopAttributes(w, nodePool, loop);
                     }
                   }
                 }  // Step c

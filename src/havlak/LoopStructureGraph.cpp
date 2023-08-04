@@ -7,30 +7,31 @@ namespace havlak {
     
     LoopStructureGraph::LoopStructureGraph() {
         _loopCounter = 0;
+        _loops = make_shared<Vector<shared_ptr<SimpleLoop>>>();
         _root = make_shared<SimpleLoop>(nullptr, true);
         _root->setNestingLevel(0);
         _root->setCounter(_loopCounter);
         _loopCounter += 1;
-        _loops.push_back(_root);
+        _loops->append(_root);
     }
 
     shared_ptr<SimpleLoop> LoopStructureGraph::createNewLoop(shared_ptr<BasicBlock> bb, bool isReducible) {
         shared_ptr<SimpleLoop> loop = make_shared<SimpleLoop>(bb, isReducible);
         loop->setCounter(_loopCounter);
         _loopCounter += 1;
-        _loops.push_back(loop);
+        _loops->append(loop);
         return loop;
     }
 
     void LoopStructureGraph::calculateNestingLevel() {
         // link up all 1st level loops to artificial root node.
-        for (auto liter : _loops) {
+        _loops->forEach([&](shared_ptr<SimpleLoop> liter) -> void {
             if (!liter->isRoot()) {
                 if (liter->getParent() == nullptr) {
                     liter->setParent(_root);
                 }
             }
-        }
+        });
 
         // recursively traverse the tree and assign levels.
         calculateNestingLevelRec(_root, 0);
@@ -47,7 +48,7 @@ namespace havlak {
     }
 
     int LoopStructureGraph::getNumLoops() {
-        return _loops.size();
+        return _loops->size();
     }
 
 }

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "SimpleLoop.h"
+#include "../som/Vector.cpp"
 
 using namespace std;
 
@@ -10,7 +11,7 @@ namespace havlak {
     class LoopStructureGraph {
         private:
             shared_ptr<SimpleLoop> _root;
-            std::vector<shared_ptr<SimpleLoop>> _loops;
+            shared_ptr<Vector<shared_ptr<SimpleLoop>>> _loops;
             int _loopCounter;
         
         public:
