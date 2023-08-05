@@ -1,7 +1,6 @@
 #ifndef CONTROLFLOWGRAPH
 #define CONTROLFLOWGRAPH
 
-#include <vector>
 #include "BasicBlock.h"
 #include "BasicBlockEdge.h"
 #include "../som/Vector.cpp"

@@ -1,6 +1,8 @@
 SRC_CORE=	src/som/Error.cpp						\
 			src/som/Random.cpp						\
 			src/som/Vector.cpp						\
+			src/som/Dictionary.cpp					\
+			src/som/IdentityDictionary.cpp			\
 			src/Bounce.cpp							\
 			src/Run.cpp 							\
 			src/Harness.cpp							\
@@ -19,7 +21,6 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/havlak/SimpleLoop.cpp				\
 			src/havlak/LoopStructureGraph.cpp		\
 			src/havlak/UnionFindNode.cpp			
-
 
 
 

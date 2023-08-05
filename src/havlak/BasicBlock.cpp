@@ -2,10 +2,10 @@
 
 namespace havlak {
     
-    BasicBlock::BasicBlock(int name) {
+    BasicBlock::BasicBlock(int name) : CustomHash(){
         _name = name;
-        _inEdges = make_shared<Vector<shared_ptr<BasicBlock>>>();
-        _outEdges = make_shared<Vector<shared_ptr<BasicBlock>>>() ;
+        _inEdges = make_shared<Vector<shared_ptr<BasicBlock>>>(2);
+        _outEdges = make_shared<Vector<shared_ptr<BasicBlock>>>(2);
     }
 
     shared_ptr<Vector<shared_ptr<BasicBlock>>> BasicBlock::getInEdges() {

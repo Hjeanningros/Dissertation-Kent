@@ -1,6 +1,6 @@
 #include "ControlFlowGraph.h"
 #include "LoopStructureGraph.h"
-#include "HavlakLoopFinder.cpp"
+#include "HavlakLoopFinder.h"
 #include <memory>
 #include <iostream>
 
@@ -30,7 +30,6 @@ namespace havlak {
 
             int buildStraight(int start, int n) {
                 for (int i = 0; i < n; i++) {
-                    cout << start + i << " start   and    " <<  start + i + 1 << " end" << endl;
                     buildConnect(start + i, start + i + 1);
                 }
                 return start + n;
@@ -67,15 +66,10 @@ namespace havlak {
 
             vector<int> main(int numDummyLoops, int findLoopIterations, int parLoops,
                     int pparLoops, int ppparLoops) {
-                cout << "hahah" << endl;
                 constructSimpleCFG();
-                cout << "hahah" << endl;
                 addDummyLoops(numDummyLoops);
-                cout << "hahah" << endl;
                 constructCFG(parLoops, pparLoops, ppparLoops);
-                cout << "hahah" << endl;
                 findLoops(_lsg);
-                cout << "hahah" << endl;
                 for (int i = 0; i < findLoopIterations; i++) {
                     findLoops(make_shared<LoopStructureGraph>());
                 }

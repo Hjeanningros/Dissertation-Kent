@@ -91,7 +91,6 @@ class Vector {
             for (size_t i = _firstIdx; i < _lastIdx; i++) {
                 fn(storage[i]);
             }
-            cout << "end Each" << endl;
         }
 
         bool hasSome(const std::function<bool(const E&)>& fn) const {

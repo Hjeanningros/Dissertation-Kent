@@ -3,11 +3,11 @@
 
 #include "../som/Vector.cpp"
 #include <memory>
-
+#include "../som/Dictionary.cpp"
 using namespace std;
 
 namespace havlak {
-    class BasicBlock {
+    class BasicBlock: public CustomHash {
         private:
             shared_ptr<Vector<shared_ptr<BasicBlock>>> _inEdges;
             shared_ptr<Vector<shared_ptr<BasicBlock>>> _outEdges;
@@ -21,7 +21,7 @@ namespace havlak {
             int getNumPred();
             void addOutEdge(shared_ptr<BasicBlock> to);
             void addInEdge(shared_ptr<BasicBlock> from);
-            int customHash();
+            int customHash() override;
             
     };
 }
