@@ -1,23 +1,21 @@
-#include "RBObject.h"
 #include <utility>
-#include <vector>
-#include "DeviceTaskDataRecord.cpp"
+#include "DeviceTaskDataRecord.h"
 #include "TaskControlBlock.cpp"
-#include "HandlerTaskDataRecord.cpp"
+#include "HandlerTaskDataRecord.h"
 #include <functional>
 #include <iostream>
 #include "../som/Error.cpp"
-#include "IdleTaskDataRecord.cpp"
+#include "IdleTaskDataRecord.h"
 #include "WorkerTaskDataRecord.cpp"
 
 namespace richards {
     class Scheduler: public RBObject {
         private:
 
-            std::shared_ptr<TaskControlBlock> _taskList;
-            std::shared_ptr<TaskControlBlock> _currentTask;
+            shared_ptr<TaskControlBlock> _taskList;
+            shared_ptr<TaskControlBlock> _currentTask;
             int _currentTaskIdentity{};
-            std::vector<std::shared_ptr<TaskControlBlock>> _taskTable;
+            shared_ptr<TaskControlBlock>* _taskTable;
             int _queuePacketCount;
             int _holdCount;
             int _layout;
@@ -26,33 +24,34 @@ namespace richards {
         public:
 
         Scheduler() {
+            RBObject::initializeConstants();
             // init tracing
             _layout  = 0;
 
             // init scheduler
             _queuePacketCount = 0;
             _holdCount = 0;
-            _taskTable = std::vector<std::shared_ptr<TaskControlBlock>>(NUM_TYPES);
+            _taskTable = new shared_ptr<TaskControlBlock>[NUM_TYPES];
 
             for (int i = 0; i < NUM_TYPES; i++) {
-                _taskTable[i] = NO_TASK;
+                _taskTable[i] = RBObject::NO_TASK;
             }
-            _taskList = NO_TASK;
+            _taskList = RBObject::NO_TASK;
         }
 
 
-        void createDevice(int identity, int priority, std::shared_ptr<Packet> workPacket, std::shared_ptr<TaskState> state) {
-            std::shared_ptr<DeviceTaskDataRecord> data = std::make_shared<DeviceTaskDataRecord>();
+        void createDevice(int identity, int priority, shared_ptr<Packet> workPacket, shared_ptr<TaskState> state) {
+            shared_ptr<DeviceTaskDataRecord> data = make_shared<DeviceTaskDataRecord>();
 
-            createTask(identity, priority, std::move(workPacket), std::move(state),
-                        [&](std::shared_ptr<Packet> workArg, std::shared_ptr<RBObject> wordArg) -> std::shared_ptr<TaskControlBlock> {
-                std::shared_ptr<DeviceTaskDataRecord> dataRecord = std::dynamic_pointer_cast<DeviceTaskDataRecord>(wordArg);
-                std::shared_ptr<Packet> functionWork = std::move(workArg);
-                if (NO_WORK == functionWork) {
-                    if (NO_WORK == (functionWork = dataRecord->getPending())) {
+            createTask(identity, priority, workPacket, state,
+                        [&](shared_ptr<Packet> workArg, shared_ptr<RBObject> wordArg) -> shared_ptr<TaskControlBlock> {
+                shared_ptr<DeviceTaskDataRecord> dataRecord = dynamic_pointer_cast<DeviceTaskDataRecord>(wordArg);
+                shared_ptr<Packet> functionWork = workArg;
+                if (RBObject::NO_WORK == functionWork) {
+                    if (RBObject::NO_WORK == (functionWork = dataRecord->getPending())) {
                         return markWaiting();
                     } else {
-                        dataRecord->setPending(NO_WORK);
+                        dataRecord->setPending(RBObject::NO_WORK);
                         return queuePacket(functionWork);
                     }
                 } else {
@@ -66,14 +65,14 @@ namespace richards {
         }
 
         void createHandler(int identity, int priority,
-            std::shared_ptr<Packet> workPaket, std::shared_ptr<TaskState> state) {
+            shared_ptr<Packet> workPaket, shared_ptr<TaskState> state) {
 
-            std::shared_ptr<HandlerTaskDataRecord> data = std::make_shared<HandlerTaskDataRecord>();
+            shared_ptr<HandlerTaskDataRecord> data = make_shared<HandlerTaskDataRecord>();
 
-            createTask(identity, priority, std::move(workPaket), std::move(state),
-                        [&](std::shared_ptr<Packet> work, std::shared_ptr<RBObject> word) -> std::shared_ptr<TaskControlBlock> {
-                std::shared_ptr<HandlerTaskDataRecord> dataRecord = std::dynamic_pointer_cast<HandlerTaskDataRecord>(word);
-                if (NO_WORK != work) {
+            createTask(identity, priority, workPaket, state,
+                        [&](shared_ptr<Packet> work, shared_ptr<RBObject> word) -> shared_ptr<TaskControlBlock> {
+                shared_ptr<HandlerTaskDataRecord> dataRecord = dynamic_pointer_cast<HandlerTaskDataRecord>(word);
+                if (RBObject::NO_WORK != work) {
                     if (WORK_PACKET_KIND == work->getKind()) {
                     dataRecord->workInAdd(work);
                     } else {
@@ -81,8 +80,8 @@ namespace richards {
                     }
                 }
 
-                std::shared_ptr<Packet> workPacket;
-                if (NO_WORK == (workPacket = dataRecord->workIn())) {
+                shared_ptr<Packet> workPacket;
+                if (RBObject::NO_WORK == (workPacket = dataRecord->workIn())) {
                     return markWaiting();
                 } else {
                     int count = workPacket->getDatum();
@@ -90,8 +89,8 @@ namespace richards {
                         dataRecord->workIn(workPacket->getLink());
                         return queuePacket(workPacket);
                     } else {
-                        std::shared_ptr<Packet> devicePacket;
-                        if (NO_WORK == (devicePacket = dataRecord->deviceIn())) {
+                        shared_ptr<Packet> devicePacket;
+                        if (RBObject::NO_WORK == (devicePacket = dataRecord->deviceIn())) {
                             return markWaiting();
                         } else {
                             dataRecord->deviceIn(devicePacket->getLink());
@@ -104,14 +103,14 @@ namespace richards {
             }, data);
         }
 
-        void createIdler(int identity, int priority, std::shared_ptr<Packet> work,
-            std::shared_ptr<TaskState> state) {
+        void createIdler(int identity, int priority, shared_ptr<Packet> work,
+            shared_ptr<TaskState> state) {
 
-                std::shared_ptr<IdleTaskDataRecord> data = std::make_shared<IdleTaskDataRecord>();
+                shared_ptr<IdleTaskDataRecord> data = make_shared<IdleTaskDataRecord>();
 
-                createTask(identity, priority, std::move(work), std::move(state),
-                            [&](std::shared_ptr<Packet> workArg, std::shared_ptr<RBObject> wordArg) -> std::shared_ptr<TaskControlBlock> {
-                    std::shared_ptr<IdleTaskDataRecord> dataRecord = std::dynamic_pointer_cast<IdleTaskDataRecord>(wordArg);
+                createTask(identity, priority, work, state,
+                            [&](shared_ptr<Packet> workArg, shared_ptr<RBObject> wordArg) -> shared_ptr<TaskControlBlock> {
+                    shared_ptr<IdleTaskDataRecord> dataRecord = dynamic_pointer_cast<IdleTaskDataRecord>(wordArg);
                     dataRecord->setCount(dataRecord->getCount() - 1);
                     if (0 == dataRecord->getCount()) {
                         return holdSelf();
@@ -127,30 +126,30 @@ namespace richards {
                     }, data);
         }
 
-        std::shared_ptr<Packet> createPacket(std::shared_ptr<Packet> link, int identity, int kind) {
-            return std::make_shared<Packet>(link, identity, kind);
+        shared_ptr<Packet> createPacket(shared_ptr<Packet> link, int identity, int kind) {
+            return make_shared<Packet>(link, identity, kind);
         }
 
         void createTask(int identity, int priority,
-            std::shared_ptr<Packet> work, std::shared_ptr<TaskState> state,
-            std::function<std::shared_ptr<TaskControlBlock>(std::shared_ptr<Packet> work, std::shared_ptr<RBObject> word)> aBlock,
-            std::shared_ptr<RBObject> data) {
+            shared_ptr<Packet> work, shared_ptr<TaskState> state,
+            function<shared_ptr<TaskControlBlock>(shared_ptr<Packet> work, shared_ptr<RBObject> word)> aBlock,
+            shared_ptr<RBObject> data) {
 
-            std::shared_ptr<TaskControlBlock> t = std::make_shared<TaskControlBlock>(_taskList, identity,
+            shared_ptr<TaskControlBlock> t = make_shared<TaskControlBlock>(_taskList, identity,
                 priority, work, state, aBlock, data);
             _taskList = t;
             _taskTable[identity] = t;
         }
 
         void createWorker(int identity, int priority,
-            std::shared_ptr<Packet> workPaket, std::shared_ptr<TaskState> state) {
+            shared_ptr<Packet> workPaket, shared_ptr<TaskState> state) {
 
-            std::shared_ptr<WorkerTaskDataRecord> dataRecord = std::make_shared<WorkerTaskDataRecord>();
+            shared_ptr<WorkerTaskDataRecord> dataRecord = make_shared<WorkerTaskDataRecord>();
 
-            createTask(identity, priority, std::move(workPaket), std::move(state),
-                [&](std::shared_ptr<Packet> work, std::shared_ptr<RBObject> word) -> std::shared_ptr<TaskControlBlock> {
-                std::shared_ptr<WorkerTaskDataRecord> data = std::dynamic_pointer_cast<WorkerTaskDataRecord>(word);
-                if (NO_WORK == work) {
+            createTask(identity, priority, workPaket, state,
+                [&](shared_ptr<Packet> work, shared_ptr<RBObject> word) -> shared_ptr<TaskControlBlock> {
+                shared_ptr<WorkerTaskDataRecord> data = dynamic_pointer_cast<WorkerTaskDataRecord>(word);
+                if (RBObject::NO_WORK == work) {
                     return markWaiting();
                 } else {
                     data->setDestination((HANDLER_A == data->getDestination()) ? HANDLER_B : HANDLER_A);
@@ -169,61 +168,61 @@ namespace richards {
         }
 
         bool start() {
-            std::shared_ptr<Packet> workQ;
-            createIdler(IDLER, 0, NO_WORK, TaskState::createRunning());
-            workQ = createPacket(NO_WORK, WORKER, WORK_PACKET_KIND);
+            shared_ptr<Packet> workQ;
+            createIdler(IDLER, 0, RBObject::NO_WORK, TaskState::createRunning());
+            workQ = createPacket(RBObject::NO_WORK, WORKER, WORK_PACKET_KIND);
             workQ = createPacket(workQ,   WORKER, WORK_PACKET_KIND);
 
             createWorker(WORKER, 1000, workQ, TaskState::createWaitingWithPacket());
-            workQ = createPacket(NO_WORK, DEVICE_A, DEVICE_PACKET_KIND);
+            workQ = createPacket(RBObject::NO_WORK, DEVICE_A, DEVICE_PACKET_KIND);
             workQ = createPacket(workQ,   DEVICE_A, DEVICE_PACKET_KIND);
             workQ = createPacket(workQ,   DEVICE_A, DEVICE_PACKET_KIND);
 
             createHandler(HANDLER_A, 2000, workQ, TaskState::createWaitingWithPacket());
-            workQ = createPacket(NO_WORK, DEVICE_B, DEVICE_PACKET_KIND);
+            workQ = createPacket(RBObject::NO_WORK, DEVICE_B, DEVICE_PACKET_KIND);
             workQ = createPacket(workQ, DEVICE_B, DEVICE_PACKET_KIND);
             workQ = createPacket(workQ, DEVICE_B, DEVICE_PACKET_KIND);
 
             createHandler(HANDLER_B, 3000, workQ, TaskState::createWaitingWithPacket());
-            createDevice(DEVICE_A, 4000, NO_WORK, TaskState::createWaiting());
-            createDevice(DEVICE_B, 5000, NO_WORK, TaskState::createWaiting());
+            createDevice(DEVICE_A, 4000, RBObject::NO_WORK, TaskState::createWaiting());
+            createDevice(DEVICE_B, 5000, RBObject::NO_WORK, TaskState::createWaiting());
 
             schedule();
 
             return _queuePacketCount == 23246 && _holdCount == 9297;
         }
 
-        std::shared_ptr<TaskControlBlock> findTask(int identity) {
-            std::shared_ptr<TaskControlBlock> t = _taskTable[identity];
-            if (NO_TASK == t) { 
+        shared_ptr<TaskControlBlock> findTask(int identity) {
+            shared_ptr<TaskControlBlock> t = _taskTable[identity];
+            if (RBObject::NO_TASK == t) { 
                 throw Error("findTask failed");
             }
             return t;
         }
 
-        std::shared_ptr<TaskControlBlock> holdSelf() {
+        shared_ptr<TaskControlBlock> holdSelf() {
             _holdCount = _holdCount + 1;
             _currentTask->setTaskHolding(true);
             return _currentTask->getLink();
         }
 
-        std::shared_ptr<TaskControlBlock> queuePacket(std::shared_ptr<Packet> packet) {
-            std::shared_ptr<TaskControlBlock> t = findTask(packet->getIdentity());
-            if (NO_TASK == t) { 
-                return NO_TASK; 
+        shared_ptr<TaskControlBlock> queuePacket(shared_ptr<Packet> packet) {
+            shared_ptr<TaskControlBlock> t = findTask(packet->getIdentity());
+            if (RBObject::NO_TASK == t) { 
+                return RBObject::NO_TASK; 
             }
 
             _queuePacketCount = _queuePacketCount + 1;
 
-            packet->setLink(NO_WORK);
+            packet->setLink(RBObject::NO_WORK);
             packet->setIdentity(_currentTaskIdentity);
             return t->addInputAndCheckPriority(packet, _currentTask);
         }
 
-        std::shared_ptr<TaskControlBlock> release(int identity) {
-            std::shared_ptr<TaskControlBlock> t = findTask(identity);
-            if (NO_TASK == t) { 
-                return NO_TASK; 
+        shared_ptr<TaskControlBlock> release(int identity) {
+            shared_ptr<TaskControlBlock> t = findTask(identity);
+            if (RBObject::NO_TASK == t) { 
+                return RBObject::NO_TASK; 
             }
             t->setTaskHolding(false);
             if (t->getPriority() > _currentTask->getPriority()) {
@@ -236,20 +235,18 @@ namespace richards {
         void trace(int id) {
             _layout = _layout - 1;
             if (0 >= _layout) {
-                std::cout << std::endl;
                 _layout = 50;
             }
-            std::cout << id <<std::endl;
         }
 
-        std::shared_ptr<TaskControlBlock> markWaiting() {
+        shared_ptr<TaskControlBlock> markWaiting() {
             _currentTask->setTaskWaiting(true);
             return _currentTask;
         }
 
         void schedule() {
             _currentTask = _taskList;
-            while (NO_TASK != _currentTask) {
+            while (RBObject::NO_TASK != _currentTask) {
                 if (_currentTask->isTaskHoldingOrWaiting()) {
                     _currentTask = _currentTask->getLink();
                 } else {
@@ -257,7 +254,6 @@ namespace richards {
                     if (TRACING) {
                         trace(_currentTaskIdentity);
                     }
-                    std::cout << _currentTaskIdentity << std::endl;
                     _currentTask = _currentTask->runTask();
                 }
             }

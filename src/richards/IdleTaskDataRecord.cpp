@@ -1,32 +1,25 @@
-#include "RBObject.h"
+#include "IdleTaskDataRecord.h"
 
 namespace richards {
-    class IdleTaskDataRecord : public RBObject {
-        private: 
+    IdleTaskDataRecord::IdleTaskDataRecord() {
+        _control = 1;
+        _count = 10000;
+    }
+    
+    int IdleTaskDataRecord::getControl() const {
+        return _control; 
+    }
 
-            int _control;
-            int _count;
+    void IdleTaskDataRecord::setControl(int aNumber) {
+        _control = aNumber;
+    }
 
-        public:
-            IdleTaskDataRecord() {
-                _control = 1;
-                _count = 10000;
-            }
-            
-            int getControl() const {
-                return _control; 
-            }
-
-            void setControl(int aNumber) {
-                _control = aNumber;
-            }
-
-            int getCount() const {
-                return _count; 
-            }
+    int IdleTaskDataRecord::getCount() const {
+        return _count; 
+    }
         
-            void setCount(int aCount) { 
-                _count = aCount; 
-            }
-    };
+    void IdleTaskDataRecord::setCount(int aCount) { 
+        _count = aCount; 
+    }
 }
+

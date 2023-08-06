@@ -1,43 +1,34 @@
-#include "Packet.h"
-#include <memory>
-#include <utility>
+#include "HandlerTaskDataRecord.h"
+
+using namespace std;
 
 namespace richards {
-    class HandlerTaskDataRecord : public RBObject {
-        private:
+    HandlerTaskDataRecord::HandlerTaskDataRecord() {
+        _workIn = NO_WORK;
+        _deviceIn = NO_WORK;
+    }
 
-            std::shared_ptr<Packet> _workIn;
-            std::shared_ptr<Packet> _deviceIn;
+    shared_ptr<Packet> HandlerTaskDataRecord::deviceIn() { 
+        return _deviceIn; 
+    }
 
-        public:
+    void HandlerTaskDataRecord::deviceIn(shared_ptr<Packet> aPacket) { 
+        _deviceIn = aPacket;
+    }
 
-            HandlerTaskDataRecord() {
-                _workIn = NO_WORK;
-                _deviceIn = NO_WORK;
-            }
+    void HandlerTaskDataRecord::deviceInAdd(shared_ptr<Packet> packet) {
+        _deviceIn = append(packet, _deviceIn);
+    }
 
-            std::shared_ptr<Packet> deviceIn() { 
-                return _deviceIn; 
-            }
+    shared_ptr<Packet> HandlerTaskDataRecord::workIn() { 
+        return _workIn; 
+    }
+    
+    void HandlerTaskDataRecord::workIn(shared_ptr<Packet> aWorkQueue) { 
+        _workIn = aWorkQueue;
+    }
 
-            void deviceIn(std::shared_ptr<Packet> aPacket) { 
-                _deviceIn = std::move(aPacket);
-            }
-
-            void deviceInAdd(std::shared_ptr<Packet> packet) {
-                _deviceIn = append(std::move(packet), _deviceIn);
-            }
-
-            std::shared_ptr<Packet> workIn() { 
-                return _workIn; 
-            }
-            
-            void workIn(std::shared_ptr<Packet> aWorkQueue) { 
-                _workIn = std::move(aWorkQueue);
-            }
-
-            void workInAdd(std::shared_ptr<Packet> packet) {
-                _workIn = append(std::move(packet), _workIn);
-            }
-    };
+    void HandlerTaskDataRecord::workInAdd(shared_ptr<Packet> packet) {
+        _workIn = append(packet, _workIn);
+    }
 }

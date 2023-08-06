@@ -1,23 +1,17 @@
-#include "Packet.h"
-#include <memory>
-#include <utility>
+#include "DeviceTaskDataRecord.h"
+
+using namespace std;
 
 namespace richards {
-    class DeviceTaskDataRecord : public RBObject {
-        private:
-            std::shared_ptr<Packet> _pending;
 
-        public:
-            DeviceTaskDataRecord() {
-                _pending = NO_WORK;
-            }
+    DeviceTaskDataRecord::DeviceTaskDataRecord() {
+        _pending = NO_WORK;
+    }
 
-            std::shared_ptr<Packet> getPending() {
-                return _pending; 
-            }
-            
-            void setPending(std::shared_ptr<Packet> packet) {
-                _pending = std::move(packet);
-            }
-    };
+    shared_ptr<Packet> DeviceTaskDataRecord::getPending() {
+        return _pending; 
+    }
+    void DeviceTaskDataRecord::setPending(shared_ptr<Packet> packet) {
+        _pending = packet;
+    }
 }

@@ -5,6 +5,8 @@
 
 #include <memory>
 
+using namespace std;
+
 namespace richards {
     class Packet;
     class TaskControlBlock;
@@ -13,8 +15,8 @@ namespace richards {
         public:
             virtual ~RBObject();
             
-            std::shared_ptr<Packet> append(std::shared_ptr<Packet> packet, std::shared_ptr<Packet> queueHead);
-
+            shared_ptr<Packet> append(shared_ptr<Packet> packet, shared_ptr<Packet> queueHead);
+            static void initializeConstants();
 
             static const int IDLER = 0;
             static const int WORKER = 1;
@@ -27,8 +29,8 @@ namespace richards {
             static const int DEVICE_PACKET_KIND = 0;
             static const int WORK_PACKET_KIND = 1;
 
-            const std::shared_ptr<Packet> NO_WORK = nullptr;
-            const std::shared_ptr<TaskControlBlock> NO_TASK = nullptr;
+            static shared_ptr<Packet> NO_WORK;
+            static shared_ptr<TaskControlBlock> NO_TASK;
     };
 }
 
