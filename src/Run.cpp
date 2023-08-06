@@ -16,6 +16,7 @@
 #include "Json.cpp"
 #include "Havlak.cpp"
 #include "DeltaBlue.cpp"
+#include "Richards.cpp"
 
 using namespace std;
 
@@ -51,6 +52,8 @@ class Run{
                 return make_shared<havlak::Havlak>();
             if (name == "DeltaBlue")
                 return make_shared<deltablue::DeltaBlue>();
+            if (name == "Richards")
+                return make_shared<richards::Richards>();
                 
             
             throw Error("No benchmark found with the name: " + name);
