@@ -9,7 +9,6 @@ class Harness {
 
         static Run processArguments(char** args, int argc) {
             Run run = Run(args[1]);
-
             if (argc > 2) {
                 run.setNumIterations(atoi(args[2]));
                 if (argc > 3) {

@@ -4,7 +4,9 @@
 #include <iostream>
 #include <functional>
 #include <algorithm>
-
+#include <memory>
+#include <stdexcept>
+#include <iostream>
 using namespace std;
 
 template<typename E>
@@ -15,10 +17,81 @@ class Vector {
         size_t _firstIdx;
         size_t _lastIdx;
 
+        static void swap(E* storage2, int i, int j) {
+            throw std::logic_error("Function swap not yet implemented");
+        }
+
+        void defaultSort(int i, int j) {
+            throw std::logic_error("Function defaultSort not yet implemented");
+        }
+
+        void sort(int i, int j, std::function<int(const E&, const E&)> c) {
+            if (c == nullptr) {
+                defaultSort(i, j);
+                return; // Make sure to return if c is nullptr.
+            }
+
+            int n = j + 1 - i;
+            if (n <= 1) {
+                return;
+            }
+
+            E di = storage[i];
+            E dj = storage[j];
+
+            if (c(di, dj) > 0) {
+                swap(storage, i, j);
+                E tt = di;
+                di = dj;
+                dj = tt;
+            }
+
+            if (n > 2) {
+                int ij = (i + j) / 2;
+                E dij = storage[ij];
+
+                if (c(di, dij) <= 0) {
+                    if (c(dij, dj) > 0) {
+                        swap(storage, j, ij);
+                        dij = dj;
+                    }
+                } else {
+                    swap(storage, i, ij);
+                    dij = di;
+                }
+
+                if (n > 3) {
+                    int k = i;
+                    int l = j - 1;
+
+                    while (true) {
+                        while (k <= l && c(dij, storage[l]) <= 0) {
+                            l -= 1;
+                        }
+
+                        k += 1;
+                        while (k <= l && c(storage[k], dij) <= 0) {
+                            k += 1;
+                        }
+
+                        if (k > l) {
+                            break;
+                        }
+                        swap(storage, k, l);
+                    }
+
+                    sort(i, l, c);
+                    sort(k, j, c);
+                }
+            }
+        }
+
+
+
     public:
-        static Vector<E> with(const E& elem) {
-            Vector<E> v(1);
-            v.append(elem);
+        static shared_ptr<Vector<E>> with(const E& elem) {
+            shared_ptr<Vector<E>> v = make_shared<Vector<E>>(1);
+            v->append(elem);
             return v;
         }
         
@@ -155,11 +228,13 @@ class Vector {
             return _capacity;
         }
 
-        void sort(const std::function<bool(const E&, const E&)>& c) {
+        void sort(std::function<int(const E&, const E&)> c) {
             if (size() > 0) {
                 sort(_firstIdx, _lastIdx - 1, c);
             }
         }
+
+
 };
 
 #endif //VECTOR

@@ -137,25 +137,25 @@ class Dictionary {
             _size = 0;
         }
 
-        Vector<shared_ptr<CustomHash>> getKeys() {
-            Vector<shared_ptr<CustomHash>> keys;
+        shared_ptr<Vector<shared_ptr<CustomHash>>> getKeys() {
+            shared_ptr<Vector<shared_ptr<CustomHash>>> keys = make_shared<Vector<shared_ptr<CustomHash>>>();
             for (int i = 0; i < _capacity; i++) {
                 std::shared_ptr<Entry> current = _buckets[i];
                 while (current != nullptr) {
-                    keys.append(current->_key);
+                    keys->append(current->_key);
                     current = current->_next;
                 }
             }
             return keys;
         }
 
-        Vector<V> getValues() {
-            Vector<V> values = Vector<V>(_size);
+        shared_ptr<Vector<V>> getValues() {
+            shared_ptr<Vector<V>> values = make_shared<Vector<V>>(_size);
 
             for (int i = 0; i < _capacity; i++) {
                 std::shared_ptr<Entry> current = _buckets[i];
                 while (current != nullptr) {
-                    values.append(current->_value);
+                    values->append(current->_value);
                     current = current->_next;
                 }
             }
