@@ -4,11 +4,11 @@ using namespace std;
 
 namespace deltablue {
 
-    Plan::Plan() : vector<shared_ptr<AbstractConstraint>>() {}
+    Plan::Plan() : Vector<shared_ptr<AbstractConstraint>>() {}
 
     void Plan::execute() {
-        for (const auto& constraint : *this) {
-            constraint->execute();
-        }
+        forEach([&](shared_ptr<AbstractConstraint> c) -> void {
+                c->execute();
+        });
     }
 }

@@ -21,28 +21,26 @@ namespace deltablue {
                 _scale = scale;
                 _offset = offset;
 
-                addConstraint(planner);
+                //addConstraint(planner);
             }
 
             void addToGraph() override {
-
-                //_v1->addConstraint(make_shared<ScaleConstraint>(_v1, _scale, _offset, _v2, _strenght));
-                _v1->addConstraint(shared_ptr<ScaleConstraint>(this));
-                _v2->addConstraint(shared_ptr<ScaleConstraint>(this));
-                _scale->addConstraint(shared_ptr<ScaleConstraint>(this));
-                _offset->addConstraint(shared_ptr<ScaleConstraint>(this));
+                _v1->addConstraint(shared_from_this());
+                _v2->addConstraint(shared_from_this());
+                _scale->addConstraint(shared_from_this());
+                _offset->addConstraint(shared_from_this());
                 _direction = NONE;
             }
 
             void removeFromGraph() override {
                 if (_v1 != nullptr) 
-                    _v1->removeConstraint(shared_ptr<ScaleConstraint>(this));
+                    _v1->removeConstraint(shared_from_this());
                 if (_v2 != nullptr) 
-                    _v2->removeConstraint(shared_ptr<ScaleConstraint>(this));
+                    _v2->removeConstraint(shared_from_this());
                 if (_scale != nullptr) 
-                    _scale->removeConstraint(shared_ptr<ScaleConstraint>(this));
+                    _scale->removeConstraint(shared_from_this());
                 if (_offset != nullptr) 
-                    _offset->removeConstraint(shared_ptr<ScaleConstraint>(this));
+                    _offset->removeConstraint(shared_from_this());
                 _direction = NONE;
             }
 

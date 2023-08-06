@@ -2,7 +2,7 @@
 #define VARIABLE
 
 #include "Strength.h"
-#include <vector>
+#include "../som/Vector.cpp"
 #include <memory> 
 
 using namespace std;
@@ -15,7 +15,7 @@ namespace deltablue {
         private:
             
             int _value;                         
-            vector<shared_ptr<AbstractConstraint>> _constraints; 
+            shared_ptr<Vector<shared_ptr<AbstractConstraint>>> _constraints; 
             shared_ptr<AbstractConstraint> _determinedBy;
             int _mark;
             shared_ptr<Strength> _walkStrength;
@@ -26,7 +26,7 @@ namespace deltablue {
 
             static shared_ptr<Variable> value(int aValue);
             void addConstraint(shared_ptr<AbstractConstraint> c);
-            vector<shared_ptr<AbstractConstraint>> getConstraints();
+            shared_ptr<Vector<shared_ptr<AbstractConstraint>>> getConstraints();
             shared_ptr<AbstractConstraint> getDeterminedBy() const;
             void setDeterminedBy(shared_ptr<AbstractConstraint> c);
             int getMark() const;

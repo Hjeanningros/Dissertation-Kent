@@ -14,14 +14,14 @@ namespace deltablue {
             }
 
             void BinaryConstraint::addToGraph() {
-                _v1->addConstraint(shared_ptr<BinaryConstraint>(this));
-                _v2->addConstraint(shared_ptr<BinaryConstraint>(this));
+                _v1->addConstraint(shared_from_this());
+                _v2->addConstraint(shared_from_this());
                 _direction = NONE;
             }
 
             void BinaryConstraint::removeFromGraph() {
-                _v1->removeConstraint(shared_ptr<BinaryConstraint>(this));
-                _v2->removeConstraint(shared_ptr<BinaryConstraint>(this));
+                _v1->removeConstraint(shared_from_this());
+                _v2->removeConstraint(shared_from_this());
                 _direction = NONE;
             }
 

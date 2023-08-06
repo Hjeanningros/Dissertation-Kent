@@ -1,6 +1,7 @@
 #include "Benchmark.cpp"
 #include "som/Error.cpp"
 #include "deltablue/Planner.h"
+#include <iostream>
 
 using namespace std;
 

@@ -8,7 +8,7 @@ namespace deltablue {
         : AbstractConstraint(strength) {
         _output = v;
         _satisfied = false;
-        addConstraint(planner);
+        //addConstraint(planner);
     }
 
     bool UnaryConstraint::isSatisfied() {
@@ -17,14 +17,14 @@ namespace deltablue {
 
     // Add myself to the constraint graph.
     void UnaryConstraint::addToGraph() {
-        _output->addConstraint(shared_ptr<UnaryConstraint>(this));
+        _output->addConstraint(shared_from_this());
         _satisfied = false;
     }
 
     // Remove myself from the constraint graph.
     void UnaryConstraint::removeFromGraph() {
         if (_output != nullptr) {
-            _output->removeConstraint(shared_ptr<UnaryConstraint>(this));
+            _output->removeConstraint(shared_from_this());
         }
         _satisfied = false;
     }

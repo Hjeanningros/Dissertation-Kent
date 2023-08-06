@@ -1,4 +1,5 @@
 #include "Planner.h"
+#include <iostream>
 
 using namespace std;
 
@@ -22,35 +23,32 @@ namespace deltablue {
         c->markUnsatisfied();
         c->removeFromGraph();
 
-        vector<shared_ptr<AbstractConstraint>> unsatisfied = removePropagateFrom(out);
-        for (shared_ptr<AbstractConstraint> u : unsatisfied) {
+        shared_ptr<Vector<shared_ptr<AbstractConstraint>>> unsatisfied = removePropagateFrom(out);
+        unsatisfied->forEach([&](shared_ptr<AbstractConstraint> u) -> void {
             incrementalAdd(u);
-        }
+        });
     }
 
-    shared_ptr<Plan> Planner::extractPlanFromConstraints(vector<shared_ptr<AbstractConstraint>> constraints) {
-        vector<shared_ptr<AbstractConstraint>> sources;
-
-        for (shared_ptr<AbstractConstraint> c : constraints) {
+    shared_ptr<Plan> Planner::extractPlanFromConstraints(shared_ptr<Vector<shared_ptr<AbstractConstraint>>> constraints) {
+        shared_ptr<Vector<shared_ptr<AbstractConstraint>>> sources = make_shared<Vector<shared_ptr<AbstractConstraint>>>();
+        constraints->forEach([&](shared_ptr<AbstractConstraint> c) -> void {
             if (c->isInput() && c->isSatisfied()) {
-                sources.push_back(c);
+                sources->append(c);
             }
-        }
-
+        });
         return makePlan(sources);
     }
 
-    shared_ptr<Plan> Planner::makePlan(vector<shared_ptr<AbstractConstraint>> sources) {
+    shared_ptr<Plan> Planner::makePlan(shared_ptr<Vector<shared_ptr<AbstractConstraint>>> sources) {
         int mark = newMark();
-        shared_ptr<Plan> plan;
-        vector<shared_ptr<AbstractConstraint>> todo = sources;
+        shared_ptr<Plan> plan = make_shared<Plan>();
+        shared_ptr<Vector<shared_ptr<AbstractConstraint>>> todo = sources;
 
-        while (!todo.empty()) {
-            shared_ptr<AbstractConstraint> c = todo.front();
-            todo.erase(todo.begin());
+        while (!todo->isEmpty()) {
+            shared_ptr<AbstractConstraint> c = todo->removeFirst();
 
             if (c->getOutput()->getMark() != mark && c->inputsKnown(mark)) {
-                plan->push_back(c);
+                plan->append(c);
                 c->getOutput()->setMark(mark);
                 addConstraintsConsumingTo(c->getOutput(), todo);
             }
@@ -60,34 +58,31 @@ namespace deltablue {
     }
 
     void Planner::propagateFrom(shared_ptr<Variable> v) {
-        vector<shared_ptr<AbstractConstraint>> todo;
+        shared_ptr<Vector<shared_ptr<AbstractConstraint>>> todo = make_shared<Vector<shared_ptr<AbstractConstraint>>>();
         addConstraintsConsumingTo(v, todo);
 
-        while (!todo.empty()) {
-            shared_ptr<AbstractConstraint> c = todo.front();
-            todo.erase(todo.begin());
+        while (!todo->isEmpty()) {
+            shared_ptr<AbstractConstraint> c = todo->removeFirst();
             c->execute();
             addConstraintsConsumingTo(c->getOutput(), todo);
         }
     }
 
-    void Planner::addConstraintsConsumingTo(shared_ptr<Variable> v, vector<shared_ptr<AbstractConstraint>> coll) {
+    void Planner::addConstraintsConsumingTo(shared_ptr<Variable> v, shared_ptr<Vector<shared_ptr<AbstractConstraint>>> coll) {
         shared_ptr<AbstractConstraint> determiningC = v->getDeterminedBy();
 
-        for (shared_ptr<AbstractConstraint> c : v->getConstraints()) {
+        v->getConstraints()->forEach([&](shared_ptr<AbstractConstraint> c) -> void {
             if (c != determiningC && c->isSatisfied()) {
-                coll.push_back(c);
+                coll->append(c);
             }
-        }
+        });
     }
 
     bool Planner::addPropagate(shared_ptr<AbstractConstraint> c, int mark) {
-        vector<shared_ptr<AbstractConstraint>> todo;
-        todo.push_back(c);
+        shared_ptr<Vector<shared_ptr<AbstractConstraint>>> todo = Vector<shared_ptr<AbstractConstraint>>::with(c);
 
-        while (!todo.empty()) {
-            shared_ptr<AbstractConstraint> d = todo.front();
-            todo.erase(todo.begin());
+        while (!todo->isEmpty()) {
+            shared_ptr<AbstractConstraint> d = todo->removeFirst();
 
             if (d->getOutput()->getMark() == mark) {
                 incrementalRemove(c);
@@ -102,79 +97,84 @@ namespace deltablue {
     }
 
     void Planner::change(shared_ptr<Variable> var, int newValue) {
-        shared_ptr<EditConstraint> editC = make_shared<EditConstraint>(var, Strength::PREFERRED, make_shared<Planner>());
+        shared_ptr<EditConstraint> editC = make_shared<EditConstraint>(var, Strength::PREFERRED, shared_from_this());
+        editC->addConstraint(shared_from_this());
 
-        vector<shared_ptr<AbstractConstraint>> editV = {editC};
+        shared_ptr<Vector<shared_ptr<AbstractConstraint>>> editV = Vector<shared_ptr<AbstractConstraint>>::with(editC);
         shared_ptr<Plan> plan = extractPlanFromConstraints(editV);
         for (int i = 0; i < 10; i++) {
             var->setValue(newValue);
             plan->execute();
         }
 
-        editC->destroyConstraint(make_shared<Planner>());
+        editC->destroyConstraint(shared_from_this());
     }
 
     void Planner::constraintsConsuming(shared_ptr<Variable> v, function<void(shared_ptr<AbstractConstraint>)> fn) {
         shared_ptr<AbstractConstraint> determiningC = v->getDeterminedBy();
-
-        for (shared_ptr<AbstractConstraint> c : v->getConstraints()) {
+        
+        v->getConstraints()->forEach([&](shared_ptr<AbstractConstraint> c) -> void {
             if (c != determiningC && c->isSatisfied()) {
                 fn(c);
             }
-        }
+        });
     }
 
     int Planner::newMark() {
-        return ++_currentMark;
+        _currentMark++;
+        return _currentMark;
     }
 
-    vector<shared_ptr<AbstractConstraint>> Planner::removePropagateFrom(shared_ptr<Variable> out) {
-        vector<shared_ptr<AbstractConstraint>> unsatisfied;
+    shared_ptr<Vector<shared_ptr<AbstractConstraint>>> Planner::removePropagateFrom(shared_ptr<Variable> out) {
+        shared_ptr<Vector<shared_ptr<AbstractConstraint>>> unsatisfied = make_shared<Vector<shared_ptr<AbstractConstraint>>>();
+
         out->setDeterminedBy(nullptr);
         out->setWalkStrength(Strength::absoluteWeakest());
         out->setStay(true);
 
-        vector<shared_ptr<Variable>> todo = {out};
+        shared_ptr<Vector<shared_ptr<Variable>>> todo = Vector<shared_ptr<Variable>>::with(out);
 
-        while (!todo.empty()) {
-            shared_ptr<Variable> v = todo.front();
-            todo.erase(todo.begin());
+        while (!todo->isEmpty()) {
+            shared_ptr<Variable> v = todo->removeFirst();
 
-            for (shared_ptr<AbstractConstraint> c : v->getConstraints()) {
+            v->getConstraints()->forEach([&](shared_ptr<AbstractConstraint> c) -> void {
                 if (!c->isSatisfied()) {
-                    unsatisfied.push_back(c);
+                    unsatisfied->append(c);
                 }
-            }   
+            });
 
             constraintsConsuming(v, [&todo](shared_ptr<AbstractConstraint> c) -> void {
                 c->recalculate();
-                todo.push_back(c->getOutput());
+                todo->append(c->getOutput());
             });
         }
 
-        sort(unsatisfied.begin(), unsatisfied.end(), [&](shared_ptr<AbstractConstraint> c1, shared_ptr<AbstractConstraint> c2) {
-            return c1->getStrength()->stronger(c2->getStrength());
+        unsatisfied->sort([&](shared_ptr<AbstractConstraint> c1, shared_ptr<AbstractConstraint> c2) -> int {
+            return c1->getStrength()->stronger(c2->getStrength()) ? -1 : 1;
+
         });
 
         return unsatisfied;
     }
 
     void Planner::chainTest(int n) {
-        shared_ptr<Planner> planner;
-        vector<shared_ptr<Variable>> vars(n + 1);
-        generate(vars.begin(), vars.end(), []() { return shared_ptr<Variable>(); });
-
+        Strength::initializeConstants();
+        shared_ptr<Planner> planner = make_shared<Planner>();
+        shared_ptr<Variable>* vars = new shared_ptr<Variable>[n + 1];
+        for (int i = 0; i < n + 1; i++) {
+            vars[i] = make_shared<Variable>();
+        }
         for (int i = 0; i < n; i++) {
             shared_ptr<Variable> v1 = vars[i];
             shared_ptr<Variable> v2 = vars[i + 1];
-            make_shared<EqualityConstraint>(v1, v2, Strength::REQUIRED, planner);
+            (make_shared<EqualityConstraint>(v1, v2, Strength::REQUIRED, planner))->addConstraint(planner);
         }
-
-        make_shared<StayConstraint>(vars[n], Strength::STRONG_DEFAULT, planner);
+        (make_shared<StayConstraint>(vars[n], Strength::STRONG_DEFAULT, planner))->addConstraint(planner);
         shared_ptr<AbstractConstraint> editC = make_shared<EditConstraint>(vars[0], Strength::PREFERRED, planner);
-
-        vector<shared_ptr<AbstractConstraint>> editV = {editC};
+        editC->addConstraint(planner);
+        shared_ptr<Vector<shared_ptr<AbstractConstraint>>> editV = Vector<shared_ptr<AbstractConstraint>>::with(editC);
         shared_ptr<Plan> plan = planner->extractPlanFromConstraints(editV);
+
         for (int i = 0; i < 100; i++) {
             vars[0]->setValue(i);
             plan->execute();
@@ -182,13 +182,12 @@ namespace deltablue {
                 throw Error("Chain test failed!");
             }
         }
-
         editC->destroyConstraint(planner);
     }
 
     void Planner::projectionTest(int n) {
-        shared_ptr<Planner> planner;
-        vector<shared_ptr<Variable>> dests;
+        shared_ptr<Planner> planner = make_shared<Planner>();
+        shared_ptr<Vector<shared_ptr<Variable>>> dests = make_shared<Vector<shared_ptr<Variable>>>();
 
         shared_ptr<Variable> scale = Variable::value(10);
         shared_ptr<Variable> offset = Variable::value(1000);
@@ -198,9 +197,9 @@ namespace deltablue {
         for (int i = 1; i <= n; i++) {
             src = Variable::value(i);
             dst = Variable::value(i);
-            dests.push_back(dst);
-            make_shared<StayConstraint>(src, Strength::DEFAULT, planner);
-            make_shared<ScaleConstraint>(src, scale, offset, dst, Strength::REQUIRED, planner);
+            dests->append(dst);
+            (make_shared<StayConstraint>(src, Strength::DEFAULT, planner))->addConstraint(planner);
+            (make_shared<ScaleConstraint>(src, scale, offset, dst, Strength::REQUIRED, planner))->addConstraint(planner);
         }
 
         planner->change(src, 17);
@@ -216,14 +215,14 @@ namespace deltablue {
 
         planner->change(scale, 5);
         for (int i = 0; i < n - 1; ++i) {
-            if (dests[i]->getValue() != (i + 1) * 5 + 1000) {
+            if (dests->at(i)->getValue() != (i + 1) * 5 + 1000) {
                 throw Error("Projection test 3 failed!");
             }
         }
 
         planner->change(offset, 2000);
         for (int i = 0; i < n - 1; ++i) {
-            if (dests[i]->getValue() != (i + 1) * 5 + 2000) {
+            if (dests->at(i)->getValue() != (i + 1) * 5 + 2000) {
                 throw Error("Projection test 4 failed!");
             }
         }

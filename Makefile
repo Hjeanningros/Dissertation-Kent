@@ -1,5 +1,8 @@
 SRC_CORE=	src/som/Error.cpp						\
 			src/som/Random.cpp						\
+			src/som/Dictionary.cpp					\
+			src/som/IdentityDictionary.cpp			\
+			src/som/Vector.cpp						\
 			src/Bounce.cpp							\
 			src/Run.cpp 							\
 			src/Harness.cpp							\
@@ -36,9 +39,9 @@ NAME_CORE   =	Harness
 $(NAME_CORE):	$(OBJ_CORE)
 	g++ -o $(NAME_CORE) $(OBJ_CORE) $(CXXFLAGS) -ldl
 
-all:    $(NAME_CORE) 
+all:	$(NAME_CORE) clean
 
-core: $(NAME_CORE)
+core:	$(NAME_CORE) clean
 
 
 clean:

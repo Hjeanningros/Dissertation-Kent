@@ -10,7 +10,7 @@ namespace deltablue {
         public:
             EqualityConstraint(shared_ptr<Variable> var1, shared_ptr<Variable> var2, shared_ptr<Strength::Sym> strength, shared_ptr<Planner> planner)
                 : BinaryConstraint(var1, var2, strength/*, planner*/) {
-                addConstraint(planner);
+                //addConstraint(planner);
             }
 
             void execute() override {

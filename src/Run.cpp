@@ -12,6 +12,7 @@
 #include <iostream>
 #include <chrono>
 #include "Benchmark.cpp"
+#include "DeltaBlue.cpp"
 
 using namespace std;
 
@@ -39,6 +40,8 @@ class Run{
                 return make_shared<Queens>();
             if (name == "Towers")
                 return make_shared<Towers>();
+            if (name == "DeltaBlue")
+                return make_shared<deltablue::DeltaBlue>();
                 
             
             throw Error("No benchmark found with the name: " + name);

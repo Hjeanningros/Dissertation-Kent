@@ -14,7 +14,7 @@ namespace deltablue {
 
     class Planner;
 
-    class AbstractConstraint {
+    class AbstractConstraint : public enable_shared_from_this<AbstractConstraint> {
         protected:
             shared_ptr<Strength> _strength;
             shared_ptr<Planner> _planer;

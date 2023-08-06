@@ -1,14 +1,13 @@
 #ifndef PLANNER
 #define PLANNER
 
-#include <vector>
 #include <memory>
 #include <algorithm>
 #include "AbstractConstraint.h"
 #include "EqualityConstraint.cpp"
 #include "ScaleConstraint.cpp"
 #include "Plan.h"
-
+#include "../som/Vector.cpp"
 #include "StayConstraint.h"
 #include "EditConstraint.h"
 
@@ -16,7 +15,7 @@ using namespace std;
 
 namespace deltablue {
 
-    class Planner {
+    class Planner : public enable_shared_from_this<Planner> {
         private: 
             int _currentMark;
 
@@ -25,10 +24,10 @@ namespace deltablue {
 
             void incrementalAdd(shared_ptr<AbstractConstraint> c);
             void incrementalRemove(shared_ptr<AbstractConstraint> c);
-            shared_ptr<Plan> extractPlanFromConstraints(vector<shared_ptr<AbstractConstraint>> constraints);
-            shared_ptr<Plan> makePlan(vector<shared_ptr<AbstractConstraint>> sources);
+            shared_ptr<Plan> extractPlanFromConstraints(shared_ptr<Vector<shared_ptr<AbstractConstraint>>> constraints);
+            shared_ptr<Plan> makePlan(shared_ptr<Vector<shared_ptr<AbstractConstraint>>> sources);
             void propagateFrom(shared_ptr<Variable> v);
-            void addConstraintsConsumingTo(shared_ptr<Variable> v, vector<shared_ptr<AbstractConstraint>> coll);
+            void addConstraintsConsumingTo(shared_ptr<Variable> v, shared_ptr<Vector<shared_ptr<AbstractConstraint>>> coll);
             bool addPropagate(shared_ptr<AbstractConstraint> c, int mark);
 
             void change(shared_ptr<Variable> var, int newValue);
@@ -37,7 +36,7 @@ namespace deltablue {
 
             int newMark();
 
-            vector<shared_ptr<AbstractConstraint>> removePropagateFrom(shared_ptr<Variable> out);
+            shared_ptr<Vector<shared_ptr<AbstractConstraint>>> removePropagateFrom(shared_ptr<Variable> out);
 
             static void chainTest(int n);
             static void projectionTest(int n);

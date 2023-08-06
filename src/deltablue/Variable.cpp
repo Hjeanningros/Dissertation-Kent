@@ -12,7 +12,7 @@ namespace deltablue {
 
     Variable::Variable() {
         _value = 0;
-        _constraints = vector<shared_ptr<AbstractConstraint>>(2);
+        _constraints = make_shared<Vector<shared_ptr<AbstractConstraint>>>(2);
         _determinedBy = nullptr;
         _walkStrength = Strength::absoluteWeakest();
         _stay = true;
@@ -20,10 +20,10 @@ namespace deltablue {
     }
 
     void Variable::addConstraint(shared_ptr<AbstractConstraint> c) {
-        _constraints.push_back(c);
+        _constraints->append(c);
     }
 
-    vector<shared_ptr<AbstractConstraint>> Variable::getConstraints() {
+    shared_ptr<Vector<shared_ptr<AbstractConstraint>>> Variable::getConstraints() {
         return _constraints;
     }
 
@@ -44,7 +44,7 @@ namespace deltablue {
     }
 
     void Variable::removeConstraint(shared_ptr<AbstractConstraint> c) {
-        _constraints.erase(remove(_constraints.begin(), _constraints.end(), c), _constraints.end());;
+        _constraints->remove(c);
         if (_determinedBy == c) {
           _determinedBy = nullptr;
         }

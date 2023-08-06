@@ -2,13 +2,13 @@
 #define PLAN
 
 #include "AbstractConstraint.h"
-#include <vector>
+#include "../som/Vector.cpp"
 
 using namespace std;
 
 namespace deltablue {
 
-    class Plan : public vector<shared_ptr<AbstractConstraint>> {
+    class Plan : public Vector<shared_ptr<AbstractConstraint>> {
         public:
             Plan();
 

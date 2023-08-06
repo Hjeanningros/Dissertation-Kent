@@ -18,13 +18,13 @@ namespace deltablue {
 
     void AbstractConstraint::addConstraint(shared_ptr<Planner> planner) {
         addToGraph();
-        planner->incrementalAdd(shared_ptr<AbstractConstraint>(this));
+        planner->incrementalAdd(shared_from_this());
     }
 
 
     void AbstractConstraint::destroyConstraint(shared_ptr<Planner> planner) {
         if (isSatisfied()) {
-            planner->incrementalRemove(shared_ptr<AbstractConstraint>(this));
+            planner->incrementalRemove(shared_from_this());
         }
         removeFromGraph();
     }
@@ -51,8 +51,8 @@ namespace deltablue {
             if (overridden != nullptr) {
                 overridden->markUnsatisfied();
             }
-            out->setDeterminedBy(shared_ptr<AbstractConstraint>(this));
-            if (!planner->addPropagate(shared_ptr<AbstractConstraint>(this), mark)) {
+            out->setDeterminedBy(shared_from_this());
+            if (!planner->addPropagate(shared_from_this(), mark)) {
                 throw Error("Cycle encountered");
             }
             out->setMark(mark);
