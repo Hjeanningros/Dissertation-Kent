@@ -45,12 +45,14 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/deltablue/UnaryConstraint.cpp		\
 			src/deltablue/Variable.cpp				\
 			src/richards/DeviceTaskDataRecord.cpp	\
-			src/richards/HanlderTaskDataRecord.cpp	\
+			src/richards/HandlerTaskDataRecord.cpp	\
 			src/richards/IdleTaskDataRecord.cpp		\
 			src/richards/Packet.cpp					\
 			src/richards/RBObject.cpp				\
 			src/richards/Scheduler.cpp				\
 			src/richards/TaskControlBlock.cpp		\
+			src/richards/TaskState.cpp				\
+			src/richards/WorkerTaskDataRecord.cpp	\
 			src/Richards.cpp
 
 
