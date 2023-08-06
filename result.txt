@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Starting Havlak benchmark ...
 hahah
 0 start   and    1 end
@@ -81,3 +82,18 @@ outerBlocks.size() = 1
 in IF target = 0x5636160d0880lastId + 1 == 11
 doDFS
 initNode
+=======
+Starting Richards benchmark ...
+3
+3
+3
+2
+2
+2
+1
+ici 
+3
+ici 
+5
+3
+>>>>>>> richards-debug
