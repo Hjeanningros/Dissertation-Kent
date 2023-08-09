@@ -1,4 +1,4 @@
-#include "Benchmark.cpp"
+#include "Benchmark.h"
 #include "richards/Scheduler.cpp"
 
 namespace richards {

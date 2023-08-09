@@ -11,7 +11,9 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/Benchmark.cpp						\
 			src/Sieve.cpp							\
 			src/Permute.cpp							\
+			src/Towers.cpp							\
 			src/Queens.cpp							\
+			src/Storage.cpp							\
 			src/nbody/Body.cpp						\
 			src/nbody/NBodySystem.cpp				\
 			src/NBody.cpp							\
@@ -57,7 +59,7 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/cd/Aircraft.cpp						\
 			src/cd/CallSign.cpp						\
 			src/cd/Collision.cpp					\
-			src/cd/COllisionDetector.cpp			\
+			src/cd/CollisionDetector.cpp			\
 			src/cd/Motion.cpp						\
 			src/cd/RedBlackTree.cpp					\
 			src/cd/Simulator.cpp					\

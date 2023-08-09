@@ -1,7 +1,7 @@
-#include "Benchmark.cpp"
+#include "Benchmark.h"
 #include "nbody/NBodySystem.cpp"
-#include <iostream>
 #include "som/Error.cpp"
+
 using namespace std;
 
 namespace nbody {

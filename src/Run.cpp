@@ -1,17 +1,17 @@
-#include "Bounce.cpp"
-#include "Mandelbrot.cpp"
-#include "Sieve.cpp"
-#include "List.cpp"
-#include "Permute.cpp"
-#include "Queens.cpp"
-#include "Towers.cpp"
+#include "Benchmark.h"
+#include "Sieve.h"
+#include "Towers.h"
+#include "Queens.h"
+#include "Permute.h"
+#include "Bounce.h"
+#include "Mandelbrot.h"
+#include "List.h"
+#include "Storage.h"
+
 #include <string>
 #include <functional>
-#include <memory>
 #include <vector>
-#include <iostream>
 #include <chrono>
-#include "Benchmark.cpp"
 #include "NBody.cpp"
 #include "Json.cpp"
 #include "Havlak.cpp"
@@ -31,6 +31,8 @@ class Run{
 
         static shared_ptr<Benchmark> getSuiteFromName(const string &name) {
 
+            if (name == "Storage")
+                return make_shared<Storage>();
             if (name == "Bounce")
                 return make_shared<Bounce>();
             if (name == "Sieve")
@@ -57,6 +59,7 @@ class Run{
                 return make_shared<richards::Richards>();
             if (name == "CD")
                 return make_shared<CD::CD>();
+
             
             throw Error("No benchmark found with the name: " + name);
         }

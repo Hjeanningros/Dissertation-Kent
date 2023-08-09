@@ -1,4 +1,4 @@
-#include "Benchmark.cpp"
+#include "Benchmark.h"
 #include "som/Error.cpp"
 #include "deltablue/Planner.h"
 #include <iostream>

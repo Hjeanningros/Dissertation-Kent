@@ -1,6 +1,5 @@
 #include "havlak/LoopTesterApp.cpp"
-#include "Benchmark.cpp"
-#include <iostream>
+#include "Benchmark.h"
 #include "som/Error.cpp"
 
 using namespace std;

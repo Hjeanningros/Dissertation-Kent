@@ -1,101 +1,78 @@
-#include <utility>
-#include <vector>
-#include "Benchmark.cpp"
-#include "som/Error.cpp"
+#include "Towers.h"
 
 using namespace std;
 
-class Towers : public Benchmark
-{
-    private:
+Towers::TowersDisk::TowersDisk(int size) {
+    _size = size;
+}
 
-        class TowersDisk {
+int Towers::TowersDisk::getSize() const {
+    return _size;
+}
 
-            private: 
-                int _size;
-                shared_ptr<TowersDisk> _next{};
+shared_ptr<Towers::TowersDisk> Towers::TowersDisk::getNext() {
+    return _next;
+}
 
-            public:
+void Towers::TowersDisk::setNext(shared_ptr<TowersDisk> value) {
+    _next = move(value);
+}
 
-                TowersDisk() = default;
+void Towers::pushDisk(shared_ptr<Towers::TowersDisk> disk, int pile) {
+    shared_ptr<Towers::TowersDisk> top = _piles[pile];
 
-                TowersDisk(int size) {
-                    _size = size;
-                }
+    if (!(top == nullptr) && (disk->getSize() >= top->getSize())) {
+        throw Error("Cannot put a big disk on a smaller one");
+    }
 
-                int getSize() const {
-                    return _size;
-                }
+    disk->setNext(top);
+    _piles[pile] = disk;
+}
 
-                shared_ptr<TowersDisk> getNext() {
-                    return _next;
-                }
+shared_ptr<Towers::TowersDisk> Towers::popDiskFrom(int pile) {
+    shared_ptr<Towers::TowersDisk> top = _piles[pile];
 
-                void setNext(shared_ptr<TowersDisk> value) {
-                    _next = move(value);
-                }
-        };
+    if (top == nullptr) {
+        throw Error("Attempting to remove a disk from an empty pile");
+    }
 
-        vector<shared_ptr<TowersDisk>> _piles;
-        int _movesDone;
+    _piles[pile] = top->getNext();
+    top->setNext(nullptr);
+    return top;
+}
 
-        void pushDisk(shared_ptr<TowersDisk> disk, int pile) {
-            shared_ptr<TowersDisk> top = _piles[pile];
+void Towers::moveTopDisk(int fromPile, int toPile) {
+    pushDisk(popDiskFrom(fromPile), toPile);
+    _movesDone++;
+}
 
-            if (!(top == nullptr) && (disk->getSize() >= top->getSize())) {
-                throw Error("Cannot put a big disk on a smaller one");
-            }
+void Towers::buildTowerAt(int pile, int disks) {
+    for (int i = disks; i >= 0; i--) {
+        pushDisk(make_shared<Towers::TowersDisk>(i), pile);
+    }
+}
 
-            disk->setNext(top);
-            _piles[pile] = disk;
-        }
+void Towers::moveDisks(int disks, int fromPile, int toPile) {
+    if(disks == 1) {
+        moveTopDisk(fromPile, toPile);
+    } else {
+        int otherPile = (3 - fromPile) - toPile;
+        moveDisks(disks - 1, fromPile, otherPile);
+        moveTopDisk(fromPile, toPile);
+        moveDisks(disks - 1, otherPile, toPile);
+    }
+}
 
-        shared_ptr<TowersDisk> popDiskFrom(int pile) {
-            shared_ptr<TowersDisk> top = _piles[pile];
+any Towers::benchmark() {
+    _piles = new shared_ptr<Towers::TowersDisk>[3];
+    buildTowerAt(0, 13);
+    _movesDone = 0;
+    moveDisks(13, 0 ,1);
+    delete[] _piles;
+    return _movesDone;
+}
 
-            if (top == nullptr) {
-                throw Error("Attempting to remove a disk from an empty pile");
-            }
-
-            _piles[pile] = top->getNext();
-            top->setNext(nullptr);
-            return top;
-        }
-
-        void moveTopDisk(int fromPile, int toPile) {
-            pushDisk(popDiskFrom(fromPile), toPile);
-            _movesDone++;
-        }
-
-        void buildTowerAt(int pile, int disks) {
-            for (int i = disks; i >= 0; i--) {
-                pushDisk(make_shared<TowersDisk>(i), pile);
-            }
-        }
-
-        void moveDisks(int disks, int fromPile, int toPile) {
-            if(disks == 1) {
-                moveTopDisk(fromPile, toPile);
-            } else {
-                int otherPile = (3 - fromPile) - toPile;
-                moveDisks(disks - 1, fromPile, otherPile);
-                moveTopDisk(fromPile, toPile);
-                moveDisks(disks - 1, otherPile, toPile);
-            }
-        }
-
-    public:
-        any benchmark() override {
-            _piles = vector<shared_ptr<TowersDisk>>(3);
-            buildTowerAt(0, 13);
-            _movesDone = 0;
-            moveDisks(13, 0 ,1);
-
-            return _movesDone;
-        }
-
-        bool verifyResult(any result) override {
-            int result_cast = any_cast<int>(result);
-            return 8191 == result_cast;
-        }
-};
+bool Towers::verifyResult(any result) {
+    int result_cast = any_cast<int>(result);
+    return 8191 == result_cast;
+}

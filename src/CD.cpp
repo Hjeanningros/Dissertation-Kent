@@ -1,4 +1,4 @@
-#include "Benchmark.cpp"
+#include "Benchmark.h"
 #include "cd/Simulator.cpp"
 #include "cd/CollisionDetector.cpp"
 #include "som/Error.cpp"
