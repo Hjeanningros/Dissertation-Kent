@@ -19,6 +19,7 @@ namespace deltablue {
             }
     
             bool verifyResult(any result) override {
+                (void)result;
                 throw Error("should never be reached");
             }
     };

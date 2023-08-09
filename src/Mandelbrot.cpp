@@ -85,5 +85,6 @@ any Mandelbrot::benchmark() {
 }
 
 bool Mandelbrot::verifyResult(any result) {
+    (void)result;
     throw Error("Should never be reached");
 }

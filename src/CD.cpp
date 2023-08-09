@@ -48,6 +48,7 @@ namespace CD {
             }
 
             bool verifyResult(std::any result) override {
+                (void)result;
                 throw Error("Should never be reached");
             }
     };

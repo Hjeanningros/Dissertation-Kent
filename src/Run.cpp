@@ -7,12 +7,12 @@
 #include "Mandelbrot.h"
 #include "List.h"
 #include "Storage.h"
+#include "NBody.h"
 
 #include <string>
 #include <functional>
 #include <vector>
 #include <chrono>
-#include "NBody.cpp"
 #include "Json.cpp"
 #include "Havlak.cpp"
 #include "DeltaBlue.cpp"

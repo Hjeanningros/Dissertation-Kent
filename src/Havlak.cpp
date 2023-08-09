@@ -34,6 +34,7 @@ namespace havlak {
 
             
             bool verifyResult(any result) override {
+                (void)result;
                 throw Error("Should never be reached");
             }
     };

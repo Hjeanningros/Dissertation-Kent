@@ -235,8 +235,10 @@ namespace richards {
         void trace(int id) {
             _layout = _layout - 1;
             if (0 >= _layout) {
+                cout << endl;
                 _layout = 50;
             }
+            cout << id << endl;
         }
 
         shared_ptr<TaskControlBlock> markWaiting() {
