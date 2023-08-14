@@ -1,18 +1,13 @@
-#include "Benchmark.h"
-#include "richards/Scheduler.cpp"
+#include "Richards.h"
 
 namespace richards {
-    class Richards : public Benchmark {
-        
-        public: 
 
-            bool verifyResult(std::any result) override {
-                bool result_cast = std::any_cast<bool>(result);
-                return result_cast;
-            }
+    bool Richards::verifyResult(std::any result) {
+        bool result_cast = std::any_cast<bool>(result);
+        return result_cast;
+    }
 
-            std::any benchmark() override {
-                return (Scheduler()).start();
-            }
-    };
-};
+    std::any Richards::benchmark() {
+        return (Scheduler()).start();
+    }
+}

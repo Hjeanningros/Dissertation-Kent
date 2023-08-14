@@ -1,31 +1,24 @@
-#include "RBObject.h"
+#include "WorkerTaskDataRecord.h"
 
 namespace richards {
-    class WorkerTaskDataRecord : public  RBObject {
-        private:
-            int _destination;
-            int _count;
+    WorkerTaskDataRecord::WorkerTaskDataRecord() {
+        _destination = HANDLER_A;
+        _count = 0;
+    }
+        
+    int WorkerTaskDataRecord::getCount() const {
+        return _count; 
+    }
 
-        public:
-            WorkerTaskDataRecord() {
-                _destination = HANDLER_A;
-                _count = 0;
-            }
-                
-            int getCount() const {
-                return _count; 
-            }
+    void WorkerTaskDataRecord::setCount(int aCount) { 
+        _count = aCount; 
+    }
 
-            void setCount(int aCount) { 
-                _count = aCount; 
-            }
+    int WorkerTaskDataRecord::getDestination() const {
+        return _destination; 
+    }
 
-            int getDestination() const {
-                return _destination; 
-            }
-
-            void setDestination(int aHandler) { 
-                _destination = aHandler; 
-            }
-    };
+    void WorkerTaskDataRecord::setDestination(int aHandler) { 
+        _destination = aHandler; 
+    }
 }

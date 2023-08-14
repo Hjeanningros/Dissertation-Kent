@@ -10,6 +10,7 @@
 #include "NBody.h"
 #include "Json.h"
 #include "CD.h"
+#include "Richards.h"
 
 #include <string>
 #include <functional>
@@ -17,7 +18,6 @@
 #include <chrono>
 #include "Havlak.cpp"
 #include "DeltaBlue.cpp"
-#include "Richards.cpp"
 
 using namespace std;
 
