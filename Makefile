@@ -56,12 +56,12 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/richards/TaskState.cpp				\
 			src/richards/WorkerTaskDataRecord.cpp	\
 			src/Richards.cpp						\
+			src/cd/RedBlackTree.cpp					\
 			src/cd/Aircraft.cpp						\
 			src/cd/CallSign.cpp						\
 			src/cd/Collision.cpp					\
 			src/cd/CollisionDetector.cpp			\
 			src/cd/Motion.cpp						\
-			src/cd/RedBlackTree.cpp					\
 			src/cd/Simulator.cpp					\
 			src/cd/Vector2D.cpp						\
 			src/cd/Vector3D.cpp						\

@@ -13,7 +13,6 @@ namespace CD {
         public:
 
             CallSign(int value);
-
             int compareTo(shared_ptr<CallSign> other) const;
     };
 };

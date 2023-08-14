@@ -9,6 +9,7 @@
 #include "Storage.h"
 #include "NBody.h"
 #include "Json.h"
+#include "CD.h"
 
 #include <string>
 #include <functional>
@@ -17,7 +18,6 @@
 #include "Havlak.cpp"
 #include "DeltaBlue.cpp"
 #include "Richards.cpp"
-#include "CD.cpp"
 
 using namespace std;
 
