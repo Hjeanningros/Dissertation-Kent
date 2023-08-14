@@ -1,40 +1,30 @@
-#include <vector>
-#include "JsonValue.h"
-#include <memory>
-#include "../som/Error.cpp"
+#include "JsonArray.h"
 
 namespace json {
-    class JsonArray : public JsonValue, public std::enable_shared_from_this<JsonArray> {
-        private:
-            vector<shared_ptr<JsonValue>> _values;
-        
-        public:
+    JsonArray::JsonArray() {
+        _values = make_shared<Vector<shared_ptr<JsonValue>>>();
+    }
 
-            JsonArray() {
-                _values = vector<shared_ptr<JsonValue>>();
-            }
+    void JsonArray::add(shared_ptr<JsonValue> value) {
+        if (value == nullptr) {
+            throw Error("value is null");
+        }
+        _values->append(value);
+    }
 
-            void add(shared_ptr<JsonValue> value) {
-                if (value == nullptr) {
-                    throw Error("value is null");
-                }
-                _values.push_back(value);
-            }
+    int JsonArray::size() {
+        return _values->size();
+    }
 
-            int size() {
-                return _values.size();
-            }
+    shared_ptr<JsonValue> JsonArray::get(int index) {
+        return _values->at(index);
+    }
 
-            shared_ptr<JsonValue> get(int index) {
-                return _values[index];
-            }
+    bool JsonArray::isArray() {
+        return true;
+    }
 
-            bool isArray() override {
-                return true;
-            }
-
-            shared_ptr<JsonArray> asArray() override {
-                return shared_from_this();
-            }
-    };
+    shared_ptr<JsonArray> JsonArray::asArray() {
+        return shared_from_this();
+    }
 }

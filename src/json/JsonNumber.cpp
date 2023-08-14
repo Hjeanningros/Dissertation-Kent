@@ -1,28 +1,20 @@
-#include <string>
-#include "../som/Error.cpp"
-#include "JsonValue.h"
+#include "JsonNumber.h"
 
 using namespace std;
 
 namespace json {
-    class JsonNumber : public JsonValue {
-        private:
-            string _string;
+    JsonNumber::JsonNumber(string string) {
+        _string = string;
+        if (string.empty()) {
+            throw Error("value is null");
+        }
+    }
 
-        public:
-            JsonNumber(string string) {
-                _string = string;
-                if (string.empty()) {
-                    throw Error("value is null");
-                }
-            }
+    string JsonNumber::toString() {
+        return _string;
+    }
 
-            string toString() override {
-                return _string;
-            }
-
-            bool isNumber() override {
-                return true;
-            }
-    };
+    bool JsonNumber::isNumber() {
+        return true;
+    }
 }

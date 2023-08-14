@@ -1,27 +1,8 @@
-#include <string>
-#include "../som/Error.cpp"
-#include <memory>
-#include "JsonArray.cpp"
-#include "JsonObject.cpp"
-#include "ParseException.cpp"
-#include "JsonLiteral.h"
-#include "JsonNumber.cpp"
-#include "JsonString.cpp"
-
-using namespace std;
+#include "JsonPureStringParser.h"
 
 namespace json {
-    class JsonPureStringParser {
-        private:
-            string _input;
-            int _index;
-            int _line;
-            int _column;
-            string _current;
-            string _captureBuffer;
-            int _captureStart;
 
-            shared_ptr<JsonValue> readValue() {
+            shared_ptr<JsonValue> JsonPureStringParser::readValue() {
                 if (_current == "n") {
                     return readNull();
                 } else if (_current == "t") {
@@ -43,7 +24,7 @@ namespace json {
                     throw expected("value");
             }
 
-            shared_ptr<JsonObject> readObject() {
+            shared_ptr<JsonObject> JsonPureStringParser::readObject() {
                 read();
                 shared_ptr<JsonObject> object = make_shared<JsonObject>();
                 skipWhiteSpace();
@@ -69,14 +50,14 @@ namespace json {
                 return object;
             }
 
-            string readName() {
+            string JsonPureStringParser::readName() {
                 if (_current != "\"") {
                     throw expected("name");
                 }
                 return readStringInternal();
             }
 
-            shared_ptr<JsonArray> readArray() {
+            shared_ptr<JsonArray> JsonPureStringParser::readArray() {
                 read();
                 shared_ptr<JsonArray> array = make_shared<JsonArray>();
                 skipWhiteSpace();
@@ -95,7 +76,7 @@ namespace json {
                 return array;
             }
 
-            shared_ptr<JsonValue> readNull() {
+            shared_ptr<JsonValue> JsonPureStringParser::readNull() {
                 read();
                 readRequiredChar("u");
                 readRequiredChar("l");
@@ -103,7 +84,7 @@ namespace json {
                 return JsonLiteral::NNULL;
             }
 
-            shared_ptr<JsonValue> readTrue() {
+            shared_ptr<JsonValue> JsonPureStringParser::readTrue() {
                 read();
                 readRequiredChar("r");
                 readRequiredChar("u");
@@ -111,7 +92,7 @@ namespace json {
                 return JsonLiteral::TRUE;
             }
 
-            shared_ptr<JsonValue> readFalse() {
+            shared_ptr<JsonValue> JsonPureStringParser::readFalse() {
                 read();
                 readRequiredChar("a");
                 readRequiredChar("l");
@@ -120,17 +101,17 @@ namespace json {
                 return JsonLiteral::FALSE;
             }
 
-            void readRequiredChar(string ch) {
+            void JsonPureStringParser::readRequiredChar(string ch) {
                 if (!readChar(ch)) {
                     throw expected("'" + ch + "'");
                 }
             }
 
-            shared_ptr<JsonValue> readString() {
+            shared_ptr<JsonValue> JsonPureStringParser::readString() {
                 return make_shared<JsonString>(readStringInternal());
             }
 
-            string readStringInternal() {
+            string JsonPureStringParser::readStringInternal() {
                 read();
                 startCapture();
                 while (_current != "\"") {
@@ -147,7 +128,7 @@ namespace json {
                 return string;
             }
 
-            void readEscape() {
+            void JsonPureStringParser::readEscape() {
                 read();
                 if (_current == "\"" || _current == "/" || _current == "\\") 
                     _captureBuffer += _current;
@@ -166,7 +147,7 @@ namespace json {
                 read();
             }
 
-            shared_ptr<JsonValue> readNumber() {
+            shared_ptr<JsonValue> JsonPureStringParser::readNumber() {
                 startCapture();
                 readChar("-");
                 string firstDigit = _current;
@@ -181,7 +162,7 @@ namespace json {
                 return make_shared<JsonNumber>(endCapture());
             }
 
-            bool readFraction() {
+            bool JsonPureStringParser::readFraction() {
                 if (!readChar(".")) {
                     return false;
                 }
@@ -192,7 +173,7 @@ namespace json {
                 return true;
             }
 
-            bool readExponent() {
+            bool JsonPureStringParser::readExponent() {
                 if (!readChar("e") && !readChar("E")) {
                     return false;
                 }
@@ -207,7 +188,7 @@ namespace json {
                 return true;
             }
 
-            bool readChar(string ch) {
+            bool JsonPureStringParser::readChar(string ch) {
                 if (_current != ch) {
                     return false;
                 }
@@ -215,7 +196,7 @@ namespace json {
                 return true;
             }
 
-            bool readDigit() {
+            bool JsonPureStringParser::readDigit() {
                 if (!isDigit()) {
                     return false;
                 }
@@ -223,13 +204,13 @@ namespace json {
                 return true;
             }
 
-            void skipWhiteSpace() {
+            void JsonPureStringParser::skipWhiteSpace() {
                 while (isWhiteSpace()) {
                     read();
                 }
             }
 
-            void read() {
+            void JsonPureStringParser::read() {
                 if ("\n" == _current) {
                     _line++;
                     _column = 0;
@@ -242,17 +223,17 @@ namespace json {
                 }
             }
 
-            void startCapture() {
+            void JsonPureStringParser::startCapture() {
                 _captureStart = _index;
             }
 
-            void pauseCapture() {
+            void JsonPureStringParser::pauseCapture() {
                 int _end = _current == "" ? _index : _index - 1;
                 _captureBuffer += _input.substr(_captureStart, _end - _captureStart + 1);
                 _captureStart = -1;
             }
 
-            string endCapture() {
+            string JsonPureStringParser::endCapture() {
                 int _end = _current == "" ? _index : _index - 1;
                 string captured;
                 if ("" == _captureBuffer) {
@@ -266,7 +247,7 @@ namespace json {
                 return captured;
             }
 
-            ParseException expected(string expected) {
+            ParseException JsonPureStringParser::expected(string expected) {
                 if (isEndOfText()) {
                     return error("Unexpected end of input");
                 }
@@ -274,16 +255,16 @@ namespace json {
                 return error("Expected " + expected);
             }
 
-            ParseException error(string message) {
+            ParseException JsonPureStringParser::error(string message) {
                 return ParseException(message, _index, _line, _column - 1);
             }
 
-            bool isWhiteSpace() {
+            bool JsonPureStringParser::isWhiteSpace() {
                 return " " == _current || "\t" == _current || "\n" == _current || "\r" == _current;
             }
 
 
-            bool isDigit() {
+            bool JsonPureStringParser::isDigit() {
                 return "0" == _current ||
                     "1" == _current ||
                     "2" == _current ||
@@ -296,12 +277,11 @@ namespace json {
                     "9" == _current;
             }
 
-            bool isEndOfText() {
+            bool JsonPureStringParser::isEndOfText() {
                 return _current == "";
             }
 
-        public: 
-            JsonPureStringParser(string string) {
+            JsonPureStringParser::JsonPureStringParser(string string) {
                 _input = string;
                 _index = -1;
                 _line = 1;
@@ -311,7 +291,7 @@ namespace json {
                 _captureBuffer = "";
             }
 
-            shared_ptr<JsonValue> parse() {
+            shared_ptr<JsonValue> JsonPureStringParser::parse() {
                 read();
                 skipWhiteSpace();
                 shared_ptr<JsonValue> result = readValue();
@@ -322,7 +302,4 @@ namespace json {
                 return result;
             }
 
-
-
-    };
 }

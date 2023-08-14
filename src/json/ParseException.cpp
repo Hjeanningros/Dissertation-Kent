@@ -1,37 +1,27 @@
-#include <string>
-
-using namespace std;
+#include "ParseException.h"
 
 namespace json {
-    class ParseException : virtual public exception {
-        private:
-            int _offset;
-            int _line;
-            int _column;
-            string _what;
+    ParseException::ParseException(string message, int offset, int line, int column) {
+        _offset = offset;
+        _line   = line;
+        _column = column;
+        _what = message + " at " + to_string(line) + ":" + to_string(column);
+    }
+    
+    int ParseException::getOffset() {
+        return _offset;
+    }
 
-        public:
-            ParseException(string message, int offset, int line, int column) {
-                _offset = offset;
-                _line   = line;
-                _column = column;
-                _what = message + " at " + to_string(line) + ":" + to_string(column);
-            }
-            
-            int getOffset() {
-                return _offset;
-            }
+    int ParseException::getLine() {
+        return _line;
+    }
 
-            int getLine() {
-                return _line;
-            }
+    int ParseException::getColumn() {
+        return _column;
+    }
 
-            int getColumn() {
-                return _column;
-            }
+    const char *ParseException::what() const throw() {
+        return (_what.c_str());
+    }
 
-            const char *what() const throw() {
-                return (_what.c_str());
-            }
-    };
 }

@@ -8,12 +8,12 @@
 #include "List.h"
 #include "Storage.h"
 #include "NBody.h"
+#include "Json.h"
 
 #include <string>
 #include <functional>
 #include <vector>
 #include <chrono>
-#include "Json.cpp"
 #include "Havlak.cpp"
 #include "DeltaBlue.cpp"
 #include "Richards.cpp"
