@@ -1,4 +1,4 @@
-#include "havlak/LoopTesterApp.cpp"
+#include "havlak/LoopTesterApp.h"
 #include "Benchmark.h"
 #include "som/Error.cpp"
 
