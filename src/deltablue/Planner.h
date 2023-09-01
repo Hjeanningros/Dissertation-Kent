@@ -4,8 +4,8 @@
 #include <memory>
 #include <algorithm>
 #include "AbstractConstraint.h"
-#include "EqualityConstraint.cpp"
-#include "ScaleConstraint.cpp"
+#include "EqualityConstraint.h"
+#include "ScaleConstraint.h"
 #include "Plan.h"
 #include "../som/Vector.cpp"
 #include "StayConstraint.h"

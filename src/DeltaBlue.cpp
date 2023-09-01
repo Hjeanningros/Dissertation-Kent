@@ -1,26 +1,20 @@
-#include "Benchmark.h"
-#include "som/Error.cpp"
-#include "deltablue/Planner.h"
-#include <iostream>
+#include "DeltaBlue.h"
 
 using namespace std;
 
 namespace deltablue {
-    class DeltaBlue : public Benchmark {
-        public:
-            bool innerBenchmarkLoop(int innerIterations) override {
-                Planner::chainTest(innerIterations);
-                Planner::projectionTest(innerIterations);
-                return true;
-            } 
+    bool DeltaBlue::innerBenchmarkLoop(int innerIterations) {
+        Planner::chainTest(innerIterations);
+        Planner::projectionTest(innerIterations);
+        return true;
+    } 
 
-            any benchmark() override {
-                throw Error("should never be reached");
-            }
+    any DeltaBlue::benchmark() {
+        throw Error("should never be reached");
+    }
     
-            bool verifyResult(any result) override {
-                (void)result;
-                throw Error("should never be reached");
-            }
-    };
+    bool DeltaBlue::verifyResult(any result) {
+        (void)result;
+        throw Error("should never be reached");
+    }
 }   

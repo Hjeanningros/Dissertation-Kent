@@ -11,13 +11,13 @@
 #include "Json.h"
 #include "CD.h"
 #include "Richards.h"
-
+#include "Havlak.h"
+#include "DeltaBlue.h"
 #include <string>
 #include <functional>
 #include <vector>
 #include <chrono>
-#include "Havlak.cpp"
-#include "DeltaBlue.cpp"
+
 
 using namespace std;
 

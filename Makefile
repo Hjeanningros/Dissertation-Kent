@@ -46,6 +46,7 @@ SRC_CORE=	src/som/Error.cpp						\
 			src/deltablue/StayConstraint.cpp		\
 			src/deltablue/UnaryConstraint.cpp		\
 			src/deltablue/Variable.cpp				\
+			src/DeltaBlue.cpp						\
 			src/richards/DeviceTaskDataRecord.cpp	\
 			src/richards/HandlerTaskDataRecord.cpp	\
 			src/richards/IdleTaskDataRecord.cpp		\

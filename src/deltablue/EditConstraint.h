@@ -1,4 +1,3 @@
-
 #ifndef EDITCONSTRAINT
 #define EDITCONSTRAINT
 
